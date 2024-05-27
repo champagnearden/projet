@@ -64,7 +64,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/new/client', async (req, res, next) => {
-    const { name, surname, email, password, cartes, comptes } = req.body;
+    const { name, surname, email, password, cartes } = req.body;
     // check if id exists in user base
     const rep = await fetch(`${req.protocol}://${req.get('host')}/users/`, {
         method: 'GET',
@@ -85,29 +85,71 @@ router.post('/new/client', async (req, res, next) => {
         next();
     } else {
     // Is the ID aleready used ?
-        let _id;
-        let merged = [_id];
+        let _id_account, _id_user, _id_card, number, iban;
+        let merged = [_id_account];
         while (merged.length != 0){
-            _id = new ObjectId();
+            _id_account = new ObjectId();
+            _id_user = new ObjectId();
+            _id_card = new ObjectId();
+            number = generateCardNumber();
+            iban = generateIban();
             merged = [];
-            merged.push(ret.clients.filter(client => client._id === _id)[0]);
-            merged.push(ret.employes.filter(employe => employe._id === _id)[0]);
+            merged.push(ret.clients.filter(client => 
+                client._id === _id_account || 
+                client._id === _id_user ||
+                client.iban === iban
+            )[0]);
+            for (let client of ret.clients){
+                merged.push(client.accounts.filter(v =>
+                    v.iban === iban || 
+                    v._id === _id_account
+                )[0]);
+                merged.push(client.cards.filter(v =>
+                    v._id === _id_card ||
+                    v.numero === number
+                )[0]);
+            }
+            merged.push(ret.employes.filter(employe => 
+                employe._id === _id_account || 
+                employe._id === _id_user 
+            )[0]);
             merged = merged.filter(v => v != undefined);
         }
         const newUser = {
-            _id,
+            _id: _id_user,
             name,
             surname, 
             email,
-            cartes,
-            comptes,
+            cartes: [_id_card],
+            comptes: [_id_account],
             password: await bcrypt.hash(password, saltRounds)
         };
 
-        // Response
-        const rep = await insertDB(req, collections.clients.name, newUser);
+        // Add a current account and then the user with the id of the account
+
+        const newAccount = {
+            _id: _id_account, 
+            solde: 0,
+            name: "Courant", 
+            iban: iban
+        };
+        await insertDB(req, collections.comptes.name, newAccount);
+
+        const currentDate = new Date();
+        const expiracy = new Date(currentDate.getFullYear() + 3, currentDate.getMonth(), currentDate.getDate()).toLocaleDateString('en-GB');
+
+        const newCard = {
+            _id: _id_card,
+            validite: expiracy,
+            numero: number,
+            cvc: Math.floor(Math.random()*999),
+            code: Math.floor(Math.random()*9999),
+            name: "Visa",
+        };
+        await insertDB(req, collections.cartes.name, newCard);
+        await insertDB(req, collections.clients.name, newUser);
         answer.body = {
-            _id,
+            _id: _id_user,
         }
         answer.statusCode = 201;
     }
@@ -291,45 +333,40 @@ router.route('/client/:id').get(async (req, res, next) => {
     next();
 })
 .delete(async (req, res, next) => {
-    const rep = await fetch(`${req.protocol}://${req.get('host')}/users/client/${req.params.id}`, {
+    const resp = await fetch(`${req.protocol}://${req.get('host')}/users/client/${req.params.id}`, {
         method: 'GET',
         headers: {
             'Authorization': req.headers['authorization']
         } 
     });
-    const users = await rep.json();
+    const users = await resp.json();
     // TODO Delete the entry of a given user and dependent elements
     if (users[0]) {
         // User is a client
         // delete cards, accounts, operations, client
         const user = users[0];
-        const rep = {
-            cards: [],
-            accounts: [],
-            operations: [],
-            client: undefined
-        }
-        if (user.cartes){
-            for (let carte of user.cartes){
-                rep.cards.append(await deleteDB(req, collections.cartes.name, carte));
+        if (user.cards){
+            answer.body.cards = [];
+            for (let carte of user.cards){
+                answer.body.cards.push(await deleteDB(req, collections.cartes.name, carte));
+                
             }
         };
         if (user.accounts){
+            answer.body.accounts = [];
             for (let account of user.accounts) {
-                rep.accounts.append(await deleteDB(req, collections.comptes.name, account));
+                answer.body.accounts.push(await deleteDB(req, collections.comptes.name, account));
             }
         };
         if (user.operations){
+            answer.body.operations = [];
             for(let op of user.operations) {
-                rep.operations.append(await deleteDB(req, collections.operations.name, op));
+                answer.body.operations.push(await deleteDB(req, collections.operations.name, op));
             }
         };
-        rep.client = await deleteDB(req, collections.clients.name, new ObjectId(req.params.id));
-
+        answer.body.client = await deleteDB(req, collections.clients.name, new ObjectId(req.params.id));
         answer.headers = 201;
-        answer.body = {
-            message: `Successfully deleted client ${req.params.id} !`
-        }
+        answer.body.message = `Successfully deleted client ${req.params.id} !`;
     } else {
         answer.statusCode = 400;
         answer.body = {
@@ -340,4 +377,21 @@ router.route('/client/:id').get(async (req, res, next) => {
     next();
 });
 
+function generateIban(){
+    let iban= 'FR'
+    for (let i = 0; i < 25; i++) {
+        iban += Math.floor(Math.random() * 10);
+    }
+    return iban;
+}
+
+function generateCardNumber(){
+    let cardNumber = "";
+    for (let i = 0; i < 4; i++) {
+        for(let j = 0; j < 4; j++){
+            cardNumber += Math.floor(Math.random() * 10);
+        }
+    }
+    return cardNumber;
+}
 export default router;

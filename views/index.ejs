@@ -190,10 +190,10 @@
               </h2>
               <div id="delete_users_client_id_body" class="accordion-collapse collapse" aria-labelledby="delete_users_client_id_label" data-bs-parent="#delete_accordion">
                 <div class="accordion-body">
-                    <input type="text" value="jbbeck42@gmail.com" id="delete_client_input">
-                    <button onclick="deleteFunction(document.getElementById('delete_client_input').value, 'client')">Delete</button>
+                    <input type="text" value="" id="delete_client_input">
+                    <button onclick="deleteFunction(document.getElementById('delete_client_id_code'), document.getElementById('delete_client_input').value, 'client')">Delete</button>
                 </div>
-                <div id="get_users_code" class="json-container"></div>
+                <div id="delete_client_id_code" class="json-container"></div>
               </div>
             </div>
             <div class="accordion-item">
@@ -204,10 +204,10 @@
                 </h2>
                 <div id="delete_users_employe_id_body" class="accordion-collapse collapse" aria-labelledby="delete_users_employe_id_label" data-bs-parent="#delete_accordion">
                   <div class="accordion-body">
-                        <input type="text" value="jbbeck42@gmail.com" id="delete_employe_input">
-                        <button onclick="deleteFunction(document.getElementById('delete_employe_input').value, 'employe')">Delete</button>
+                        <input type="text" value="" id="delete_employe_input">
+                        <button onclick="deleteFunction(document.getElementById('delete_employe_id_code'), document.getElementById('delete_employe_input').value, 'employe')">Delete</button>
                   </div>
-                  <div id="get_users_code" class="json-container"></div>
+                  <div id="delete_employe_id_code" class="json-container"></div>
                 </div>
             </div>
         </div>
@@ -285,25 +285,7 @@
             });
         }
 
-        async function deleteFunction(uname, dest) {
-            const response = await fetch("/users", {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer '+ sessionStorage.getItem('token')
-                }
-            });
-            const users = await response.json();
-            let merged = [];
-            switch (dest) {
-                case 'client':
-                    merged = users.clients.find(user => user.email == uname);
-                    break;
-                case 'employe':
-                    merged = users.employes.find(user => user.email == uname);
-                default:
-                    break;
-            }
-            const id = merged._id;
+        async function deleteFunction(elem, id, dest) {
             const token = localStorage.getItem('token');
             response = await fetch(`/users/${dest}/${id}`, {
                 method: 'DELETE', // Use POST method
@@ -311,37 +293,21 @@
                     'Authorization': 'Bearer '+token,
                     'Content-Type': 'application/json' // Set the content type to JSON
                 },
-                body: JSON.stringify({username: uname}) // Convert the data object to JSON string
+                body: JSON.stringify({username: id}) // Convert the data object to JSON string
             });
+            const info = await response.json();
+            renderJson(elem, info);
         };
 
-        async function putFunction(uname, dest) {
-            const response = await fetch("/users", {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer '+ sessionStorage.getItem('token')
-                }
-            });
-            const users = await response.json();
-            let merged = [];
-            switch (dest) {
-                case 'client':
-                    merged = users.clients.find(user => user.email == uname);
-                    break;
-                case 'employe':
-                    merged = users.employes.find(user => user.email == uname);
-                default:
-                    break;
-            }
-            const id = merged._id;
+        async function putFunction(id, dest) {
             const token = localStorage.getItem('token');
             response = await fetch(`/users/${dest}/${id}`, {
-                method: 'DELETE', // Use POST method
+                method: 'PUT', // Use POST method
                 headers: {
                     'Authorization': 'Bearer '+token,
                     'Content-Type': 'application/json' // Set the content type to JSON
                 },
-                body: JSON.stringify({username: uname}) // Convert the data object to JSON string
+                body: JSON.stringify({username: id}) // Convert the data object to JSON string
             });
         };
 

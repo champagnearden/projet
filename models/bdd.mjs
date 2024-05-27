@@ -49,7 +49,9 @@ const collections = {
             _id: "ObjectId",
             validite: "String",
             numero: "String",
-            crypto: "Integer"
+            cvc: "String",
+            code: "String",
+            name: "String"
         }
     },
     clients: {
@@ -69,7 +71,8 @@ const collections = {
         fields: {
             _id: "ObjectId", 
             solde: "Integer",
-            name: "String"
+            name: "String",
+            iban: "String"
         }
     },
     employes: {
