@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+    <title>Swagger API</title>
+</head>
+<style>
+    .content-section {
+        display: none; /* Hide all sections by default */
+    }
+    .json-container {
+        background-color: #f5f5f5;
+        padding: 10px;
+        border-radius: 5px;
+        height: 400px; /* Adjust this height as needed */
+        overflow: auto;
+    }
+    pre {
+        margin: 0; /* Remove default margin */
+    }
+</style>
+<body>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Virtuella</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#" id="nav-get">GET</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" id="nav-post">POST</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" id="nav-delete">DELETE</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" id="nav-put">PUT</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+    <br><br><br>
+    <section id="post-section" class="content-section">
+        <div class="accordion accordion-flush" id="post_accordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="login_client_label">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#login_client_body" aria-expanded="false" aria-controls="login_client_body">
+                        <h1>POST /login/client</h1>
+                    </button>
+                </h2>
+                <div id="login_client_body" class="accordion-collapse collapse" aria-labelledby="login_client_label" data-bs-parent="#post_accordion">
+                    <div class="accordion-body">
+                        <form action="/login/client" method="post" id="login_client">
+                            <input type="text" name="username" placeholder="username" value="jude.bocq@gmail.com">
+                            <input type="password" name="password" placeholder="password" value="bonjour">
+                            <input type="submit" value="Login">
+                        </form>
+                    </div>
+                    <div id="login_client_code" class="json-container"></div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="login_employe_label">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#login_employe_body" aria-expanded="false" aria-controls="login_employe_body">
+                        <h1>POST /login/employe</h1>
+                    </button>
+                </h2>
+                <div id="login_employe_body" class="accordion-collapse collapse" aria-labelledby="login_employe_label" data-bs-parent="#post_accordion">
+                    <div class="accordion-body">
+                        <form action="/login/employe" method="post" id="login_employe">
+                            <input type="text" name="username" placeholder="username" value="0123456789">
+                            <input type="password" name="password" placeholder="password" value="bonjour">
+                            <input type="submit" value="Login">
+                        </form>
+                    </div>
+                    <div id="login_employe_code" class="json-container"></div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="users_new_client_label">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_new_client_body" aria-expanded="false" aria-controls="users_new_client_body">
+                        <h1>POST /users/new/client</h1>
+                    </button>
+                </h2>
+                <div id="users_new_client_body" class="accordion-collapse collapse" aria-labelledby="users_new_client_label" data-bs-parent="#post_accordion">
+                    <div class="accordion-body">
+                        <form action="/users/new/client" method="post" id="users_new_client">
+                            <input type="email" name="email" placeholder="email" value="<%= locals.email %>"> <br>
+                            <input type="text" name="name" value="<%= locals.name %>" placeholder="name"> <br>
+                            <input type="text" name="surname" value="<%= locals.surname %>" placeholder="surname"> <br>
+                            <input type="password" name="password" placeholder="password" value="<%= locals.password %>"><br>
+                            <p>La creation de compte et rattachement de carte se fera plus tard</p>
+                            <input type="submit" value="Create">
+                        </form>
+                    </div>
+                    <div id="users_new_client_code" class="json-container"></div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="users_new_employe_label">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_new_employe_body" aria-expanded="false" aria-controls="users_new_employe_body">
+                        <h1>POST /users/new/employe</h1>
+                    </button>
+                </h2>
+                <div id="users_new_employe_body" class="accordion-collapse collapse" aria-labelledby="users_new_employe_label" data-bs-parent="#post_accordion">
+                    <div class="accordion-body">
+                        <form action="/users/new/employe" method="post" id="users_new_employe">
+                            <input type="email" name="email" placeholder="email" value="<%= locals.email %>"> <br>
+                            <input type="text" name="name" value="<%= locals.name %>" placeholder="name"> <br>
+                            <input type="text" name="surname" value="<%= locals.surname %>" placeholder="surname"> <br>
+                            <input type="password" name="password" placeholder="password" value="<%= locals.password %>"><br>
+                            <select name="role">
+                                <option value="ADMIN">ADMIN</option>
+                                <option value="Autre">Autre</option>
+                            </select>
+                            <br>
+                            <select name="clients" multiple>
+                                <option value="664509ae87732bf815449adf">Jude</option>
+                            </select>
+                            <br>
+                            <input type="submit" value="Create">
+                        </form>
+                    </div>
+                    <div id="users_new_employe_code" class="json-container"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="get-section" class="content-section">
+        <div class="accordion accordion-flush" id="get_accordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="users">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_body" aria-expanded="false" aria-controls="users_body">
+                  <h1>GET /users/</h1>
+                </button>
+              </h2>
+              <div id="users_body" class="accordion-collapse collapse" aria-labelledby="users" data-bs-parent="#get_accordion">
+                <div class="accordion-body">
+                    <button onclick="getFunction('/users/', document.getElementById('get_users_code'))">Get</button>
+                </div>
+                <div id="get_users_code" class="json-container"></div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="users_client_id">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_client_id_body" aria-expanded="false" aria-controls="users_client_id_body">
+                  <h1>GET /users/client/${id}</h1>
+                </button>
+              </h2>
+              <div id="users_client_id_body" class="accordion-collapse collapse" aria-labelledby="users_client_id" data-bs-parent="#get_accordion">
+                <div class="accordion-body">
+                    <input type="text" id="get_users_client_id_input" value="">
+                    <button onclick="getFunction('/users/client/'+document.getElementById('get_users_client_id_input').value, document.getElementById('get_users_client_id_code'))">Get</button>
+                </div>
+                <div id="get_users_client_id_code" class="json-container"></div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="users_employe_id_label">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_employe_id_body" aria-expanded="false" aria-controls="users_employe_id_body">
+                  <h1> GET /users/employe/${id}</h1>
+                </button>
+              </h2>
+              <div id="users_employe_id_body" class="accordion-collapse collapse" aria-labelledby="users_employe_id_label" data-bs-parent="#get_accordion">
+                <div class="accordion-body">
+                    <input type="text" id="get_users_employe_id_input" value="">
+                    <button onclick="getFunction('/users/employe/'+document.getElementById('get_users_employe_id_input').value, document.getElementById('get_users_employe_id_code'))">Get</button>
+                </div>
+                <div id="get_users_employe_id_code" class="json-container"></div>
+              </div>
+            </div>
+        </div>
+    </section>
+    <section id="delete-section" class="content-section">
+        <div class="accordion accordion-flush" id="delete_accordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="delete_users_client_id_label">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#delete_users_client_id_body" aria-expanded="false" aria-controls="delete_users_client_id_body">
+                  <h1>DELETE /users/client/${id}</h1>
+                </button>
+              </h2>
+              <div id="delete_users_client_id_body" class="accordion-collapse collapse" aria-labelledby="delete_users_client_id_label" data-bs-parent="#delete_accordion">
+                <div class="accordion-body">
+                    <input type="text" value="jbbeck42@gmail.com" id="delete_client_input">
+                    <button onclick="deleteFunction(document.getElementById('delete_client_input').value, 'client')">Delete</button>
+                </div>
+                <div id="get_users_code" class="json-container"></div>
+              </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="delete_users_employe_id_label">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#delete_users_employe_id_body" aria-expanded="false" aria-controls="delete_users_employe_id_body">
+                    <h1>DELETE /users/employe/${id}</h1>
+                  </button>
+                </h2>
+                <div id="delete_users_employe_id_body" class="accordion-collapse collapse" aria-labelledby="delete_users_employe_id_label" data-bs-parent="#delete_accordion">
+                  <div class="accordion-body">
+                        <input type="text" value="jbbeck42@gmail.com" id="delete_employe_input">
+                        <button onclick="deleteFunction(document.getElementById('delete_employe_input').value, 'employe')">Delete</button>
+                  </div>
+                  <div id="get_users_code" class="json-container"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="put-section" class="content-section">
+        <div class="accordion accordion-flush" id="put_accordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="put_users_client_id_label">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#put_users_client_id_body" aria-expanded="false" aria-controls="put_users_client_id_body">
+                  <h1>PUT /users/client/${id}</h1>
+                </button>
+              </h2>
+              <div id="put_users_client_id_body" class="accordion-collapse collapse" aria-labelledby="put_users_client_id_label" data-bs-parent="#put_accordion">
+                <div class="accordion-body">
+                    <input type="text" value="jbbeck42@gmail.com" id="put_client_input">
+                    <button onclick="putFunction(document.getElementById('put_client_input').value, 'client')">Delete</button>
+                </div>
+                <div id="get_users_code" class="json-container"></div>
+              </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="put_users_employe_id_label">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#put_users_employe_id_body" aria-expanded="false" aria-controls="put_users_employe_id_body">
+                    <h1>PUT /users/employe/${id}</h1>
+                  </button>
+                </h2>
+                <div id="put_users_employe_id_body" class="accordion-collapse collapse" aria-labelledby="put_users_employe_id_label" data-bs-parent="#put_accordion">
+                  <div class="accordion-body">
+                        <input type="text" value="jbbeck42@gmail.com" id="put_employe_input">
+                        <button onclick="putFunction(document.getElementById('put_employe_input').value, 'employe')">Delete</button>
+                  </div>
+                  <div id="get_users_code" class="json-container"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script async>
+        const forms = [
+            document.getElementById('login_client'),
+            document.getElementById('login_employe'),
+            document.getElementById('users_new_client'),
+            document.getElementById('users_new_employe')
+        ]
+        const token = sessionStorage.getItem('token');
+        for (let form of forms) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault()
+                const resp = await fetch (form.action, {
+                    method: form.method,
+                    headers: {
+                        'Authorization': 'Bearer '+token,
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify(Object.fromEntries(new FormData(form).entries()))
+                });
+                const data = await resp.json();
+                renderJson(document.getElementById(form.id+'_code'),data);
+            }); 
+        }
+
+        async function login() {
+            const resp = fetch('/login/client', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: 'jude.bocq@gmail.com',
+                    password: 'bonjour'
+                })
+            }).then(async resp => {
+                const data = await resp.json();
+                sessionStorage.setItem('token', data.token);
+            });
+        }
+
+        async function deleteFunction(uname, dest) {
+            const response = await fetch("/users", {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer '+ sessionStorage.getItem('token')
+                }
+            });
+            const users = await response.json();
+            let merged = [];
+            switch (dest) {
+                case 'client':
+                    merged = users.clients.find(user => user.email == uname);
+                    break;
+                case 'employe':
+                    merged = users.employes.find(user => user.email == uname);
+                default:
+                    break;
+            }
+            const id = merged._id;
+            const token = localStorage.getItem('token');
+            response = await fetch(`/users/${dest}/${id}`, {
+                method: 'DELETE', // Use POST method
+                headers: {
+                    'Authorization': 'Bearer '+token,
+                    'Content-Type': 'application/json' // Set the content type to JSON
+                },
+                body: JSON.stringify({username: uname}) // Convert the data object to JSON string
+            });
+        };
+
+        async function putFunction(uname, dest) {
+            const response = await fetch("/users", {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer '+ sessionStorage.getItem('token')
+                }
+            });
+            const users = await response.json();
+            let merged = [];
+            switch (dest) {
+                case 'client':
+                    merged = users.clients.find(user => user.email == uname);
+                    break;
+                case 'employe':
+                    merged = users.employes.find(user => user.email == uname);
+                default:
+                    break;
+            }
+            const id = merged._id;
+            const token = localStorage.getItem('token');
+            response = await fetch(`/users/${dest}/${id}`, {
+                method: 'DELETE', // Use POST method
+                headers: {
+                    'Authorization': 'Bearer '+token,
+                    'Content-Type': 'application/json' // Set the content type to JSON
+                },
+                body: JSON.stringify({username: uname}) // Convert the data object to JSON string
+            });
+        };
+
+        function renderJson(elem, data) {
+            elem.innerHTML = `<pre><code class="json">${JSON.stringify(data, null, 2)}</code></pre>`;
+            document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+            });
+        }
+
+        async function getFunction(dest, elem){
+            const response = await fetch(dest, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer '+ sessionStorage.getItem('token')
+                }
+            });
+            const users = await response.json();
+            renderJson(elem, users);
+            if (users.clients) {
+                document.getElementById('get_users_client_id_input').value = users.clients[0]._id;
+            };
+            if (users.employes) {
+                document.getElementById('get_users_employe_id_input').value = users.employes[0]._id;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            login();
+            const sections = document.querySelectorAll('.content-section');
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+
+            function showSection(sectionId) {
+                sections.forEach(section => {
+                    section.style.display = 'none';
+                });
+                document.getElementById(sectionId).style.display = 'block';
+            }
+
+            function setActiveNavLink(activeLink) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                });
+                activeLink.classList.add('active');
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const id = event.target.id.replace('nav-', '');
+                    showSection(`${id}-section`);
+                    setActiveNavLink(event.target);
+                });
+            });
+
+            // Optionally, show the GET section by default
+            showSection('get-section');
+
+        });
+
+    </script>
+</body>
+</html>
