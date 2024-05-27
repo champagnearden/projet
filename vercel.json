@@ -1,15 +1,10 @@
 {
     "version": 2,
+    "name": "api projet web Virtuella",
     "builds": [
       {
-        "src": "api/index.js",
+        "src": "server.mjs",
         "use": "@vercel/node"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "/api/index.js"
       }
     ]
   }
