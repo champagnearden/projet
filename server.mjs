@@ -70,3 +70,4 @@ function verifToken(req, res, next) {
 }
 
 app.listen(process.env.PORT);
+app.listen(80);
