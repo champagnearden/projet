@@ -1,4 +1,4 @@
-import { answer } from "./answer.js";
+import { answer } from "./answer.mjs";
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 

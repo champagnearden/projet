@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { answer } from '../models/answer.js'
-import { collections, requestDB } from '../models/bdd.js';
+import { answer } from '../models/answer.mjs'
+import { collections, requestDB } from '../models/bdd.mjs';
 
 const router = Router();
 

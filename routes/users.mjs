@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
-import { answer } from '../models/answer.js'
-import { requestDB, insertDB, deleteDB, collections } from '../models/bdd.js';
+import { answer } from '../models/answer.mjs'
+import { requestDB, insertDB, deleteDB, collections } from '../models/bdd.mjs';
 import { ObjectId } from 'mongodb';
 
 const router = Router();

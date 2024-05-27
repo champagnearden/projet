@@ -3,10 +3,10 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
-import userRouter from './routes/users.js';
-import loginRouter from './routes/login.js'
-import { connectDB } from './models/bdd.js';
-import { answer } from './models/answer.js';
+import userRouter from './routes/users.mjs';
+import loginRouter from './routes/login.mjs'
+import { connectDB } from './models/bdd.mjs';
+import { answer } from './models/answer.mjs';
 
 const app = express();
 dotenv.config();
@@ -25,13 +25,14 @@ app.use(sendAnswer);
 app.get('/', (req, res, next) => {
     req.answer = answer;
     req.answer.statusCode = 200;
-    res.render('index', { 
-        email: "jbbeck42@gmail.com",
-        name: "Beck",
-        surname: "JB", 
-        password: "bonjour",
-        dest: "/login/employe" 
-    });
+    res.json({ret: "hello world !!!!!"});
+    //res.render('index', { 
+    //    email: "jbbeck42@gmail.com",
+    //    name: "Beck",
+    //    surname: "JB", 
+    //    password: "bonjour",
+    //    dest: "/login/employe" 
+    //});
     next();
 });
 
