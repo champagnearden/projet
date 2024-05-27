@@ -25,14 +25,13 @@ app.use(sendAnswer);
 app.get('/', (req, res, next) => {
     req.answer = answer;
     req.answer.statusCode = 200;
-    res.json({ret: "hello world !!!!!"});
-    //res.render('index', { 
-    //    email: "jbbeck42@gmail.com",
-    //    name: "Beck",
-    //    surname: "JB", 
-    //    password: "bonjour",
-    //    dest: "/login/employe" 
-    //});
+    res.render('index', { 
+        email: "jbbeck42@gmail.com",
+        name: "Beck",
+        surname: "JB", 
+        password: "bonjour",
+        dest: "/login/employe" 
+    });
     next();
 });
 
