@@ -59,9 +59,9 @@
                 </h2>
                 <div id="login_client_body" class="accordion-collapse collapse" aria-labelledby="login_client_label" data-bs-parent="#post_accordion">
                     <div class="accordion-body">
-                        <form action="/login/client" method="post" id="login_client">
-                            <input type="text" name="username" placeholder="username" value="jude.bocq@gmail.com">
-                            <input type="password" name="password" placeholder="password" value="bonjour">
+                        <form action="/login/client" id="login_client">
+                            <input type="text" name="username" placeholder="username" value="jude.bocq@gmail.com"> <br>
+                            <input type="password" name="password" placeholder="password" value="bonjour"><br>
                             <input type="submit" value="Login">
                         </form>
                     </div>
@@ -76,9 +76,9 @@
                 </h2>
                 <div id="login_employe_body" class="accordion-collapse collapse" aria-labelledby="login_employe_label" data-bs-parent="#post_accordion">
                     <div class="accordion-body">
-                        <form action="/login/employe" method="post" id="login_employe">
-                            <input type="text" name="username" placeholder="username" value="0123456789">
-                            <input type="password" name="password" placeholder="password" value="bonjour">
+                        <form action="/login/employe" id="login_employe">
+                            <input type="text" name="username" placeholder="username" value="0123456789"><br>
+                            <input type="password" name="password" placeholder="password" value="bonjour"><br>
                             <input type="submit" value="Login">
                         </form>
                     </div>
@@ -93,7 +93,7 @@
                 </h2>
                 <div id="users_new_client_body" class="accordion-collapse collapse" aria-labelledby="users_new_client_label" data-bs-parent="#post_accordion">
                     <div class="accordion-body">
-                        <form action="/users/new/client" method="post" id="users_new_client">
+                        <form action="/users/new/client" id="users_new_client">
                             <input type="email" name="email" placeholder="email" value="<%= locals.email %>"> <br>
                             <input type="text" name="name" value="<%= locals.name %>" placeholder="name"> <br>
                             <input type="text" name="surname" value="<%= locals.surname %>" placeholder="surname"> <br>
@@ -113,7 +113,7 @@
                 </h2>
                 <div id="users_new_employe_body" class="accordion-collapse collapse" aria-labelledby="users_new_employe_label" data-bs-parent="#post_accordion">
                     <div class="accordion-body">
-                        <form action="/users/new/employe" method="post" id="users_new_employe">
+                        <form action="/users/new/employe" id="users_new_employe">
                             <input type="email" name="email" placeholder="email" value="<%= locals.email %>"> <br>
                             <input type="text" name="name" value="<%= locals.name %>" placeholder="name"> <br>
                             <input type="text" name="surname" value="<%= locals.surname %>" placeholder="surname"> <br>
@@ -145,7 +145,9 @@
               </h2>
               <div id="users_body" class="accordion-collapse collapse" aria-labelledby="users" data-bs-parent="#get_accordion">
                 <div class="accordion-body">
-                    <button onclick="getFunction('/users/', document.getElementById('get_users_code'))">Get</button>
+                    <form action="/users" id="get_users">
+                        <input type="submit" value="GET">
+                    </form>
                 </div>
                 <div id="get_users_code" class="json-container"></div>
               </div>
@@ -158,8 +160,10 @@
               </h2>
               <div id="users_client_id_body" class="accordion-collapse collapse" aria-labelledby="users_client_id" data-bs-parent="#get_accordion">
                 <div class="accordion-body">
-                    <input type="text" id="get_users_client_id_input" value="">
-                    <button onclick="getFunction('/users/client/'+document.getElementById('get_users_client_id_input').value, document.getElementById('get_users_client_id_code'))">Get</button>
+                    <form action="/users/client/id" id="get_users_client_id">
+                        <input type="text" name="ident" id="get_users_client_id_input" placeholder="id" value="" required>
+                        <input type="submit" value="GET">
+                    </form>
                 </div>
                 <div id="get_users_client_id_code" class="json-container"></div>
               </div>
@@ -172,8 +176,10 @@
               </h2>
               <div id="users_employe_id_body" class="accordion-collapse collapse" aria-labelledby="users_employe_id_label" data-bs-parent="#get_accordion">
                 <div class="accordion-body">
-                    <input type="text" id="get_users_employe_id_input" value="">
-                    <button onclick="getFunction('/users/employe/'+document.getElementById('get_users_employe_id_input').value, document.getElementById('get_users_employe_id_code'))">Get</button>
+                    <form action="/users/employe/id" id="get_users_employe_id">
+                        <input type="text" name="ident" id="get_users_employe_id_input" placeholder="id" value="" required>
+                        <input type="submit" value="GET">
+                    </form>
                 </div>
                 <div id="get_users_employe_id_code" class="json-container"></div>
               </div>
@@ -190,10 +196,12 @@
               </h2>
               <div id="delete_users_client_id_body" class="accordion-collapse collapse" aria-labelledby="delete_users_client_id_label" data-bs-parent="#delete_accordion">
                 <div class="accordion-body">
-                    <input type="text" value="" id="delete_client_input">
-                    <button onclick="deleteFunction(document.getElementById('delete_client_id_code'), document.getElementById('delete_client_input').value, 'client')">Delete</button>
+                    <form action="/users/client/id" id="delete_users_client_id">
+                        <input type="text" value="" name="ident" id="delete_client_id_input" placeholder="id" required>
+                        <input type="submit" value="DELETE">
+                    </form>
                 </div>
-                <div id="delete_client_id_code" class="json-container"></div>
+                <div id="delete_users_client_id_code" class="json-container"></div>
               </div>
             </div>
             <div class="accordion-item">
@@ -204,10 +212,12 @@
                 </h2>
                 <div id="delete_users_employe_id_body" class="accordion-collapse collapse" aria-labelledby="delete_users_employe_id_label" data-bs-parent="#delete_accordion">
                   <div class="accordion-body">
-                        <input type="text" value="" id="delete_employe_input">
-                        <button onclick="deleteFunction(document.getElementById('delete_employe_id_code'), document.getElementById('delete_employe_input').value, 'employe')">Delete</button>
+                    <form action="/users/employe/id" id="delete_users_employe_id">
+                        <input type="text" name="ident" value="" placeholder="id" id="delete_users_employe_id_input" required>
+                        <input type="submit" value="DELETE">
+                    </form>
                   </div>
-                  <div id="delete_employe_id_code" class="json-container"></div>
+                  <div id="delete_users_employe_id_code" class="json-container"></div>
                 </div>
             </div>
         </div>
@@ -222,10 +232,25 @@
               </h2>
               <div id="put_users_client_id_body" class="accordion-collapse collapse" aria-labelledby="put_users_client_id_label" data-bs-parent="#put_accordion">
                 <div class="accordion-body">
-                    <input type="text" value="jbbeck42@gmail.com" id="put_client_input">
-                    <button onclick="putFunction(document.getElementById('put_client_input').value, 'client')">Delete</button>
+                    <form action="/users/client/id" id="put_users_client_id">
+                        <input type="text" value="" name="ident" id="put_client_id_input" placeholder="id" required><br>
+                        <input type="text" name="surname" placeholder="surname"><br>
+                        <input type="text" name="name" placeholder="name"><br>
+                        <input type="email" name="email" placeholder="email"><br>
+                        <p>Comptes</p>
+                        <select name="accounts"multiple>
+                            <option value="664509ec87732bf815449ae1">Courant</option>
+                            <option value="6645ae5e87732bf815449af5">Livret A</option>
+                        </select><br>
+                        <p>Cartes</p>
+                        <select name="cards" multiple>
+                            <option value="66450a1787732bf815449ae3">Visa</option>
+                            <option value="6654c5cc3be96b1ee5ec5b68">Mastercard</option>
+                        </select><br>
+                        <input type="submit" value="Update">
+                    </form>
                 </div>
-                <div id="get_users_code" class="json-container"></div>
+                <div id="put_users_client_id_code" class="json-container"></div>
               </div>
             </div>
             <div class="accordion-item">
@@ -236,10 +261,25 @@
                 </h2>
                 <div id="put_users_employe_id_body" class="accordion-collapse collapse" aria-labelledby="put_users_employe_id_label" data-bs-parent="#put_accordion">
                   <div class="accordion-body">
-                        <input type="text" value="jbbeck42@gmail.com" id="put_employe_input">
-                        <button onclick="putFunction(document.getElementById('put_employe_input').value, 'employe')">Delete</button>
+                      <form action="/users/employe/id" id="put_users_employe_id">
+                        <input type="text" name="ident" value="" id="put_users_employe_id_input" placeholder="id" required><br>
+                        <input type="text" name="name" value="bouijoux" placeholder="name"><br>
+                        <input type="text" name="surname" value="corentin" placeholder="surname"><br>
+                        <input type="email" name="email" value="corentin.bouijoux@example.com" placeholder="email"><br>
+                        <p>role</p>
+                        <select name="role">
+                            <option value="ADMIN">ADMIN</option>
+                            <option value="Other">Other</option>
+                        </select><br>
+                        <p>clients</p>
+                        <select name="clients" multiple>
+                            <option value="664509ae87732bf815449adf">Jude</option>
+                            <option value="664f73ab74cdd726f83d7267">JB</option>
+                        </select><br>
+                        <input type="submit" value="Update">
+                    </form>
                   </div>
-                  <div id="get_users_code" class="json-container"></div>
+                  <div id="put_users_employe_id_code" class="json-container"></div>
                 </div>
             </div>
         </div>
@@ -249,20 +289,46 @@
         const forms = [
             document.getElementById('login_client'),
             document.getElementById('login_employe'),
+            document.getElementById('users_new_employe'),
             document.getElementById('users_new_client'),
-            document.getElementById('users_new_employe')
+            document.getElementById('get_users'),
+            document.getElementById('get_users_client_id'),
+            document.getElementById('get_users_employe_id'),
+            document.getElementById('delete_users_client_id'),
+            document.getElementById('delete_users_employe_id'),
+            document.getElementById('put_users_client_id'),
+            document.getElementById('put_users_employe_id')
+        ];
+        const selects_multiple_ids = [
+            "clients",
+            "accounts",
+            "cards"
         ]
         const token = sessionStorage.getItem('token');
         for (let form of forms) {
             form.addEventListener('submit', async (e) => {
-                e.preventDefault()
+                e.preventDefault();
+                const method = localStorage.getItem("method");
+                const formData = new FormData(form);
+                const formValues = Object.fromEntries(formData);
+                // Convert FormData entries to an object, handling multiple select separately
+                formData.forEach((value, key) => {
+                    if (selects_multiple_ids.find( e => e === key)) {
+                        const multiple = formData.getAll(key);
+                        formValues[key] = formData.getAll(key);
+                    }
+                });
+                if (form.action.includes("/id")){
+                    form.action = form.action.replace("id", formValues.ident);
+                    delete formValues['ident'];
+                }
                 const resp = await fetch (form.action, {
-                    method: form.method,
+                    method: method,
                     headers: {
                         'Authorization': 'Bearer '+token,
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify(Object.fromEntries(new FormData(form).entries()))
+                    body: method === "get" ? undefined : JSON.stringify(formValues)
                 });
                 const data = await resp.json();
                 renderJson(document.getElementById(form.id+'_code'),data);
@@ -285,54 +351,11 @@
             });
         }
 
-        async function deleteFunction(elem, id, dest) {
-            const token = localStorage.getItem('token');
-            response = await fetch(`/users/${dest}/${id}`, {
-                method: 'DELETE', // Use POST method
-                headers: {
-                    'Authorization': 'Bearer '+token,
-                    'Content-Type': 'application/json' // Set the content type to JSON
-                },
-                body: JSON.stringify({username: id}) // Convert the data object to JSON string
-            });
-            const info = await response.json();
-            renderJson(elem, info);
-        };
-
-        async function putFunction(id, dest) {
-            const token = localStorage.getItem('token');
-            response = await fetch(`/users/${dest}/${id}`, {
-                method: 'PUT', // Use POST method
-                headers: {
-                    'Authorization': 'Bearer '+token,
-                    'Content-Type': 'application/json' // Set the content type to JSON
-                },
-                body: JSON.stringify({username: id}) // Convert the data object to JSON string
-            });
-        };
-
         function renderJson(elem, data) {
             elem.innerHTML = `<pre><code class="json">${JSON.stringify(data, null, 2)}</code></pre>`;
             document.querySelectorAll('pre code').forEach((block) => {
                 hljs.highlightElement(block);
             });
-        }
-
-        async function getFunction(dest, elem){
-            const response = await fetch(dest, {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer '+ sessionStorage.getItem('token')
-                }
-            });
-            const users = await response.json();
-            renderJson(elem, users);
-            if (users.clients) {
-                document.getElementById('get_users_client_id_input').value = users.clients[0]._id;
-            };
-            if (users.employes) {
-                document.getElementById('get_users_employe_id_input').value = users.employes[0]._id;
-            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -360,11 +383,13 @@
                     const id = event.target.id.replace('nav-', '');
                     showSection(`${id}-section`);
                     setActiveNavLink(event.target);
+                    localStorage.setItem("method", id);
                 });
             });
 
             // Optionally, show the GET section by default
             showSection('get-section');
+            localStorage.setItem("method", "get")
 
         });
 

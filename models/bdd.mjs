@@ -32,6 +32,11 @@ async function deleteDB(req, collection, data) {
     return req.db.collection(collection).deleteOne({ _id: data });
 }
 
+async function updateDB(req, collection, data) {
+    req.db = mongo.db(process.env.TABLE_NAME);
+    return req.db.collection(collection).updateOne({ _id: data.id }, { $set: data.body });
+}
+
 async function connectDB(req, res, next) {
     await mongo.connect()
     .catch(err => {
@@ -103,4 +108,4 @@ const collections = {
 
 const mongo = new MongoClient(process.env.DB_HOST);
 
-export { requestDB, connectDB, insertDB, deleteDB, collections };
+export { requestDB, connectDB, insertDB, deleteDB, updateDB, collections };

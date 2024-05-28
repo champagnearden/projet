@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import { answer } from '../models/answer.mjs'
-import { requestDB, insertDB, deleteDB, collections } from '../models/bdd.mjs';
+import { requestDB, insertDB, deleteDB, updateDB, collections } from '../models/bdd.mjs';
 import { ObjectId } from 'mongodb';
 
 const router = Router();
@@ -246,9 +246,25 @@ router.route('/employe/:id').get(async (req, res, next) => {
     req.answer = JSON.stringify(answer);
     next();
 })
-.put((req, res, next) => {
-    // TODO Update the informations of a given user
-    res.send(`User Put ${req.params.id}`);
+.put(async (req, res, next) => {
+    // TODO Verify informations
+    if (req.body.clients){
+        let clients=[];
+        for (let client of req.body.clients) {
+            clients.push(new ObjectId(client));
+        }
+        req.body.clients = clients;
+    }
+    const data = {
+        id: new ObjectId(req.params.id),
+        body: req.body
+    };
+    const rep = await updateDB(req, collections.employes.name, data);
+    answer.statusCode = 200;
+    answer.body = {
+        message: rep
+    }
+    req.answer = JSON.stringify(answer);
     next();
 })
 .delete(async (req, res, next) => {
@@ -327,9 +343,32 @@ router.route('/client/:id').get(async (req, res, next) => {
     req.answer = JSON.stringify(answer);
     next();
 })
-.put((req, res, next) => {
-    // TODO Update the informations of a given user
-    res.send(`User Put ${req.params.id}`);
+.put(async (req, res, next) => {
+    // TODO Verify informations
+    if (req.body.accounts){
+        let accounts=[];
+        for (let client of req.body.accounts) {
+            accounts.push(new ObjectId(client));
+        }
+        req.body.accounts = accounts;
+    }
+    if (req.body.cards){
+        let cards=[];
+        for (let client of req.body.cards) {
+            cards.push(new ObjectId(client));
+        }
+        req.body.cards = cards;
+    }
+    const data = {
+        id: new ObjectId(req.params.id),
+        body: req.body
+    };
+    const rep = await updateDB(req, collections.clients.name, data);
+    answer.statusCode = 200;
+    answer.body = {
+        message: rep
+    }
+    req.answer = JSON.stringify(answer);
     next();
 })
 .delete(async (req, res, next) => {

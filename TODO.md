@@ -7,6 +7,9 @@ OK /users/(id) : get informations about one specific user
 [POST]
 OK /login : send login informations
 OK /users/new : send information to create the user
+/users/client/new/card
+/users/client/new/account
+/users/client/virement
 
 [PUT]
 /users/(id) : update informations of one specific user
