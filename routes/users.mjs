@@ -216,6 +216,81 @@ router.post('/new/employe', async (req, res, next) => {
     next();
 });
 
+router.post('/client/virement', async (req, res, next) => {
+    let { ident, amount, from_iban, to_iban, libelle } = req.body;
+    if (to_iban === "OTHER"){
+        to_iban = req.body.to_iban_other;
+    }
+    // get the account id and solde of sender
+    query = [
+        {
+            $match: { _id: new ObjectId(ident)}
+        },
+        {
+            $lookup: {
+                from: collections.comptes.name,
+                localField: 'comptes',
+                foreignField: '_id',
+                as: 'accounts'
+            }
+        },
+        {
+            $project: {
+                _id: 1,
+                accounts: 1
+            }
+        }
+    ];
+    let accountIds = (await requestDB(req, collections.clients.name, query))[0];
+    const sender = accountIds.accounts.find(e => e.iban === from_iban);
+    
+    // get the account id and solde of receiver
+    query = [
+        {
+            $match: { iban: to_iban }
+        },
+        {
+            $project: {
+                _id: 1,
+                solde: 1,
+            }
+        }
+    ];
+    const receiver = (await requestDB(req, collections.comptes.name, query))[0];
+    // set the amount of sender
+    let rep = {}
+    rep.sender = await updateDB(req, collections.comptes.name, {
+        id: sender._id,
+        body: {
+            solde: sender.solde - Number(amount)
+        }
+    });
+    // set the amount of receiver
+    console.log(receiver.solde);
+    rep.receiver = await updateDB(req, collections.comptes.name, {
+        id: receiver._id,
+        body: {
+            solde: Number(receiver.solde) + Number(amount)
+        }
+    });
+    
+    // write the operation
+    const data = {
+        _id: new ObjectId(),
+        montant: Number(amount),
+        compte: from_iban,
+        emetteur: new ObjectId(ident),
+        destination: to_iban,
+        libelle,
+        date: new Date()
+    };
+    rep.operation = await insertDB(req, collections.operations.name, data);
+    answer.statusCode=200;
+    answer.body = rep;
+    req.answer = JSON.stringify(answer);
+    next();
+});
+
 router.route('/employe/:id').get(async (req, res, next) => {
     query = [
         {
