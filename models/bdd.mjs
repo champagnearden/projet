@@ -110,9 +110,8 @@ const collections = {
     }
 }
 let url = 'mongodb://';
-console.log("MONGOPASSWORD: ", process.env.MONGOPASSWORD);
 if (process.env.MONGOPASSWORD){
-    url += `${process.env.MONGOUSER}:${process.env.MONGOPASSWORD}@${process.env.MONGOHOST}:${process.env.MONGOPORT}`;
+    url += `${process.env.MONGOUSER}:${process.env.MONGOPASSWORD}@`;
 }
 url+=`${process.env.MONGOHOST}:${process.env.MONGOPORT}`;
 const mongo = new MongoClient(url);
