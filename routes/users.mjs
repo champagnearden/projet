@@ -14,7 +14,7 @@ router.get('/', (req, res, next) => {
                 from: collections.comptes.name,
                 localField: 'comptes',
                 foreignField: '_id',
-                as: 'accounts'
+                as: 'comptes'
             }
         },
         {
@@ -22,7 +22,7 @@ router.get('/', (req, res, next) => {
                 from: collections.cartes.name,
                 localField: 'cartes',
                 foreignField: '_id',
-                as: 'cards'
+                as: 'cartes'
             }
         },
         {
@@ -31,8 +31,8 @@ router.get('/', (req, res, next) => {
                 name: 1,
                 surname: 1,
                 email: 1,
-                cards: 1,
-                accounts: 1
+                cartes: 1,
+                comptes: 1
             }   
         }
     ];
@@ -64,18 +64,18 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/new/client', async (req, res, next) => {
-    const { name, surname, email, password, cartes } = req.body;
+    const { name, surname, email, password } = req.body;
     // check if id exists in user base
-    const rep = await fetch(`${req.protocol}://${req.get('host')}/users/`, {
-        method: 'GET',
-        headers: {
-            'Authorization': req.headers['authorization']
-        } 
-    });
-    const ret = await rep.json();
+    const clients = await requestDB(req, collections.clients.name, [
+        {
+            $project: {
+                email: 1
+            }
+        }
+    ]);
     // Is email aleready used ?
     if (
-        ret.clients.find(client => client.email === email)
+        clients.find(c => c.email === email)
     ) {
         answer.body = {
             error: "Email aleready exists !"
@@ -84,72 +84,19 @@ router.post('/new/client', async (req, res, next) => {
         req.answer = JSON.stringify(answer);
         next();
     } else {
-    // Is the ID aleready used ?
-        let _id_account, _id_user, _id_card, number, iban;
-        let merged = [_id_account];
-        while (merged.length != 0){
-            _id_account = new ObjectId();
-            _id_user = new ObjectId();
-            _id_card = new ObjectId();
-            number = generateCardNumber();
-            iban = generateIban();
-            merged = [];
-            merged.push(ret.clients.filter(client => 
-                client._id === _id_account || 
-                client._id === _id_user ||
-                client.iban === iban
-            )[0]);
-            for (let client of ret.clients){
-                merged.push(client.accounts.filter(v =>
-                    v.iban === iban || 
-                    v._id === _id_account
-                )[0]);
-                merged.push(client.cards.filter(v =>
-                    v._id === _id_card ||
-                    v.numero === number
-                )[0]);
-            }
-            merged.push(ret.employes.filter(employe => 
-                employe._id === _id_account || 
-                employe._id === _id_user 
-            )[0]);
-            merged = merged.filter(v => v != undefined);
-        }
+        const cardId = await insertDB(req, collections.cartes.name, await generateCardInfos(req, "Visa"));
+        const accountId = await insertDB(req, collections.comptes.name, await generateAccountInfos(req, "Courant"));
         const newUser = {
-            _id: _id_user,
             name,
             surname, 
             email,
-            cartes: [_id_card],
-            comptes: [_id_account],
+            cartes: [cardId],
+            comptes: [accountId],
             password: await bcrypt.hash(password, saltRounds)
         };
-
-        // Add a current account and then the user with the id of the account
-
-        const newAccount = {
-            _id: _id_account, 
-            solde: 0,
-            name: "Courant", 
-            iban: iban
-        };
-        await insertDB(req, collections.comptes.name, newAccount);
-
-        const currentDate = new Date();
-        const expiracy = new Date(currentDate.getFullYear() + 3, currentDate.getMonth(), currentDate.getDate()).toLocaleDateString('en-GB');
-
-        const newCard = {
-            _id: _id_card,
-            validite: expiracy,
-            numero: number,
-            cvc: Math.floor(Math.random()*999),
-            code: Math.floor(Math.random()*9999),
-            name: "Visa",
-        };
-        await insertDB(req, collections.cartes.name, newCard);
-        await insertDB(req, collections.clients.name, newUser);
+        const userId = await insertDB(req, collections.clients.name, newUser);
         answer.body = {
-            _id: _id_user,
+            _id: userId,
         }
         answer.statusCode = 201;
     }
@@ -212,6 +159,61 @@ router.post('/new/employe', async (req, res, next) => {
         }
         answer.statusCode = 201;
     }
+    req.answer = JSON.stringify(answer);
+    next();
+});
+
+router.post('/new/client/card', async (req, res, next) => {
+    const { ident, name } = req.body;
+
+    let cardId = (await insertDB(req, collections.cartes.name, await generateCardInfos(req, name))).insertedId;
+    // get the account id and solde of sender
+    query = [
+        {
+            $match: { _id: new ObjectId(ident)}
+        },
+        {
+            $project: {
+                cartes: 1
+            }
+        }
+    ];
+    const cards = (await requestDB(req, collections.clients.name, query))[0].cartes;
+    cards.push(new ObjectId(cardId));
+    answer.body = await updateDB(req, collections.clients.name, {
+        id: new ObjectId(ident),
+        body: {
+            cartes: cards
+        }
+    });
+    answer.statusCode = 201;
+    req.answer = JSON.stringify(answer);
+    next();
+});
+
+router.post('/new/client/account', async (req, res, next) => {
+
+    const { ident, name } = req.body;
+    const accountID = (await insertDB(req, collections.comptes.name, await generateAccountInfos(req, name))).insertedId;
+    let accounts = (await requestDB(req, collections.clients.name, [
+        {
+            $match: { _id: new ObjectId(ident) }
+        },
+        {
+            $project: {
+                comptes: 1
+            }
+        }
+    ]))[0].comptes;
+    if (!accounts) accounts = [];
+    accounts.push(new ObjectId(accountID));
+    answer.body = await updateDB(req, collections.clients.name, {
+        id: new ObjectId(ident),
+        body: {
+            comptes: accounts
+        }
+    });
+    answer.statusCode = 201;
     req.answer = JSON.stringify(answer);
     next();
 });
@@ -506,5 +508,67 @@ function generateCardNumber(){
         }
     }
     return cardNumber;
+}
+
+async function generateCardInfos(req, name){
+    const currentDate = new Date();
+    const expiracy = new Date(currentDate.getFullYear() + 3, currentDate.getMonth(), currentDate.getDate()).toLocaleDateString('en-GB');
+    let numero, _id;
+    let merged = [numero];
+    const cards = await requestDB(req, collections.cartes.name, [
+        {
+            $project: {
+                _id: 1,
+                numero: 1
+            }
+        }
+    ]);
+    while (merged.length != 0){
+        _id = new ObjectId();
+        numero = generateCardNumber();
+        merged = [];
+        merged.push(cards.filter(c => 
+            c._id === _id ||
+            c.numero === numero
+        )[0]);
+        merged = merged.filter(v => v != undefined);
+    }
+    return {
+        _id,
+        validite: expiracy,
+        numero,
+        cvc: Math.floor(Math.random()*999),
+        code: Math.floor(Math.random()*9999),
+        name,
+    };
+}
+
+async function generateAccountInfos(req, name) {
+    let iban, _id;
+    let merged= [iban];
+    const accounts = await requestDB(req, collections.comptes.name, [
+        {
+            $project: {
+                _id: 1,
+                iban: 1
+            }
+        }
+    ]);
+    while (merged.length != 0){
+        _id = new ObjectId();
+        iban = generateIban();
+        merged = [];
+        merged.push(accounts.filter(a => 
+            a.iban == iban ||
+            a._id == _id
+        )[0]);
+        merged = merged.filter(v => v != undefined);
+    }
+    return {
+        _id,
+        solde: 0,
+        name, 
+        iban
+    };
 }
 export default router;

@@ -109,7 +109,11 @@ const collections = {
         }
     }
 }
-
-const mongo = new MongoClient(`mongodb://${process.env.MONGOUSER}:${process.env.MONGOPASSWORD}@${process.env.MONGOHOST}:${process.env.MONGOPORT}`);
+let url = 'mongodb://';
+if (process.env.MONGOPASSWORD){
+    url += `${process.env.MONGOUSER}:${process.env.MONGOPASSWORD}@${process.env.MONGOHOST}:${process.env.MONGOPORT}`;
+}
+url+=`${process.env.MONGOHOST}:${process.env.MONGOPORT}`;
+const mongo = new MongoClient(url);
 
 export { requestDB, connectDB, insertDB, deleteDB, updateDB, collections };

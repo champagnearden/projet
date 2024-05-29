@@ -7,8 +7,8 @@ OK /users/(id) : get informations about one specific user
 [POST]
 OK /login : send login informations
 OK /users/new : send information to create the user
-/users/client/new/card
-/users/client/new/account
+OK /users/client/new/card
+OK /users/client/new/account
 OK /users/client/virement
 
 [PUT]
@@ -21,6 +21,6 @@ OK Authentification par JWT
 
 OK Swagger API
 
-OK Creation IBAN pour /users/new qui existe pas en base
+Creation IBAN pour /users/new qui existe pas en base
 
-OK Création de client => créer carte
+Création de client => créer carte
