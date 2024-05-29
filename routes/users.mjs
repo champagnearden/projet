@@ -266,7 +266,6 @@ router.post('/client/virement', async (req, res, next) => {
         }
     });
     // set the amount of receiver
-    console.log(receiver.solde);
     rep.receiver = await updateDB(req, collections.comptes.name, {
         id: receiver._id,
         body: {

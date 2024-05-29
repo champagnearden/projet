@@ -38,7 +38,7 @@ async function updateDB(req, collection, data) {
 }
 
 async function connectDB(req, res, next) {
-    await mongo.connect()
+    await mongo.connect(`mongodb://${process.env.MONGOUSER}:${process.env.MONGOPASSWORD}@${process.env.MONGOHOST}:${process.env.MONGOPORT}/${process.env.TABLE_NAME}?authSource=${process.env.DB_AUTH_SOURCE}`)
     .catch(err => {
         console.error('Error connecting to MongoDB:', err);
         answer.statusCode = 500;

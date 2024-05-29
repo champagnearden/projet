@@ -9,10 +9,10 @@ OK /login : send login informations
 OK /users/new : send information to create the user
 /users/client/new/card
 /users/client/new/account
-/users/client/virement
+OK /users/client/virement
 
 [PUT]
-/users/(id) : update informations of one specific user
+OK /users/(id) : update informations of one specific user
 
 [DELETE]
 OK /users/(id) : delete one specific user
@@ -21,6 +21,6 @@ OK Authentification par JWT
 
 OK Swagger API
 
-Creation IBAN pour /users/new qui existe pas en base
+OK Creation IBAN pour /users/new qui existe pas en base
 
-Création de client => créer carte
+OK Création de client => créer carte
