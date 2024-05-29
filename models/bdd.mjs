@@ -38,11 +38,15 @@ async function updateDB(req, collection, data) {
 }
 
 async function connectDB(req, res, next) {
-    await mongo.connect(`mongodb://${process.env.MONGOUSER}:${process.env.MONGOPASSWORD}@${process.env.MONGOHOST}:${process.env.MONGOPORT}/${process.env.TABLE_NAME}?authSource=${process.env.DB_AUTH_SOURCE}`)
+    await mongo.connect()
+    .then(() => {
+        console.log("Connected to MongoDB");
+    })
     .catch(err => {
         console.error('Error connecting to MongoDB:', err);
         answer.statusCode = 500;
         answer.body = err;
+        req.answer = JSON.stringify(answer);
     });
     next();
 }
@@ -106,6 +110,6 @@ const collections = {
     }
 }
 
-const mongo = new MongoClient(process.env.DB_HOST);
+const mongo = new MongoClient(`mongodb://${process.env.MONGOUSER}:${process.env.MONGOPASSWORD}@${process.env.MONGOHOST}:${process.env.MONGOPORT}`);
 
 export { requestDB, connectDB, insertDB, deleteDB, updateDB, collections };
