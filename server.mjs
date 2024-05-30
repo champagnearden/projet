@@ -74,5 +74,10 @@ function verifToken(req, res, next) {
         return res.status(401).send('No token provided');
     }
 }
+
+app.options('*', cors({
+    origin: '*',
+    optionsSuccessStatus: 200
+}));
 const port  = process.env.PORT || 3000;
 app.listen(port, () => console.log("Server started on port "+port));
