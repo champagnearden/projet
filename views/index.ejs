@@ -88,12 +88,12 @@
             <div class="accordion-item">
                 <h2 class="accordion-header" id="users_new_client_label">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_new_client_body" aria-expanded="false" aria-controls="users_new_client_body">
-                        <h1>POST /users/new/client</h1>
+                        <h1>POST /users/client/new</h1>
                     </button>
                 </h2>
                 <div id="users_new_client_body" class="accordion-collapse collapse" aria-labelledby="users_new_client_label" data-bs-parent="#post_accordion">
                     <div class="accordion-body">
-                        <form action="/users/new/client" id="users_new_client">
+                        <form action="/users/client/new" id="users_new_client">
                             <input type="email" name="email" placeholder="email" value="<%= locals.email %>"> <br>
                             <input type="text" name="name" value="<%= locals.name %>" placeholder="name"> <br>
                             <input type="text" name="surname" value="<%= locals.surname %>" placeholder="surname"> <br>
@@ -108,12 +108,12 @@
             <div class="accordion-item">
                 <h2 class="accordion-header" id="users_new_employe_label">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_new_employe_body" aria-expanded="false" aria-controls="users_new_employe_body">
-                        <h1>POST /users/new/employe</h1>
+                        <h1>POST /users/employe/new</h1>
                     </button>
                 </h2>
                 <div id="users_new_employe_body" class="accordion-collapse collapse" aria-labelledby="users_new_employe_label" data-bs-parent="#post_accordion">
                     <div class="accordion-body">
-                        <form action="/users/new/employe" id="users_new_employe">
+                        <form action="/users/employe/new" id="users_new_employe">
                             <input type="email" name="email" placeholder="email" value="<%= locals.email %>"> <br>
                             <input type="text" name="name" value="<%= locals.name %>" placeholder="name"> <br>
                             <input type="text" name="surname" value="<%= locals.surname %>" placeholder="surname"> <br>
@@ -167,12 +167,12 @@
             <div class="accordion-item">
                 <h2 class="accordion-header" id="users_new_client_card_label">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_new_client_card_body" aria-expanded="false" aria-controls="users_new_client_card_body">
-                        <h1>POST /users/new/client/card</h1>
+                        <h1>POST /users/client/new/card</h1>
                     </button>
                 </h2>
                 <div id="users_new_client_card_body" class="accordion-collapse collapse" aria-labelledby="users_new_client_card_label" data-bs-parent="#post_accordion">
                     <div class="accordion-body">
-                        <form action="/users/new/client/card" id="users_new_client_card">
+                        <form action="/users/client/new/card" id="users_new_client_card">
                             <input type="text" name="ident" placeholder="id" required><br>
                             <input type="text" name="name" placeholder="name" required><br>
                             <input type="submit" value="Create">
@@ -184,12 +184,12 @@
             <div class="accordion-item">
                 <h2 class="accordion-header" id="users_new_client_account_label">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_new_client_account_body" aria-expanded="false" aria-controls="users_new_client_account_body">
-                        <h1>POST /users/new/client/account</h1>
+                        <h1>POST /users/client/new/account</h1>
                     </button>
                 </h2>
                 <div id="users_new_client_account_body" class="accordion-collapse collapse" aria-labelledby="users_new_client_account_label" data-bs-parent="#post_accordion">
                     <div class="accordion-body">
-                        <form action="/users/new/client/account" id="users_new_client_account">
+                        <form action="/users/client/new/account" id="users_new_client_account">
                             <input type="text" name="ident" placeholder="id" required><br>
                             <input type="text" name="name" placeholder="name" required><br>
                             <input type="submit" value="Create">

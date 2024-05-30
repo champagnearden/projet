@@ -4,7 +4,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import userRouter from './routes/users.mjs';
-import loginRouter from './routes/login.mjs'
+import loginRouter from './routes/login.mjs';
+import clientRouter from './routes/client/client.mjs';
 import { connectDB } from './models/bdd.mjs';
 import { answer } from './models/answer.mjs';
 
@@ -22,6 +23,7 @@ app.use(logger);
 app.use(connectDB);
 app.use('/login', loginRouter);
 //app.use(verifToken);
+app.use('/users/client', clientRouter);
 app.use('/users', userRouter);
 app.use(sendAnswer);
 
@@ -36,12 +38,6 @@ app.get('/', (req, res, next) => {
         dest: "/login/employe" 
     });
     next();
-});
-
-app.get('/:id', (req, res, next) => {
-    res.json({
-        id: req.params.id
-    });
 });
 
 function logger(req, res, next) {

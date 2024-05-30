@@ -8,7 +8,7 @@ OK /users/(id) : get informations about one specific user
 OK /login : send login informations
 OK /users/new : send information to create the user
 OK /users/client/new/card
-OK /users/client/new/account
+OK users/client/new/account
 OK /users/client/virement
 
 [PUT]
