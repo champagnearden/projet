@@ -165,6 +165,31 @@
                 </div>
             </div>
             <div class="accordion-item">
+                <h2 class="accordion-header" id="login_client_label">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#login_client_forgotpassword_body" aria-expanded="false" aria-controls="login_client_forgotpassword_body">
+                        <h1>POST /login/client/forgotpassword</h1>
+                    </button>
+                </h2>
+                <div id="login_client_forgotpassword_body" class="accordion-collapse collapse" aria-labelledby="login_client_forgotpassword_label" data-bs-parent="#post_accordion">
+                    <div class="accordion-body">
+                        <div>
+                            <textarea disabled>
+{
+    username,
+    password
+}
+                            </textarea>
+                        </div>
+                        <form action="/login/client/forgotpassword" id="login_client_forgotpassword">
+                            <input type="text" name="username" placeholder="username" value="jude.bocq@gmail.com"> <br>
+                            <input type="password" name="password" placeholder="password" value="bonjour"><br>
+                            <input type="submit" value="Login">
+                        </form>
+                    </div>
+                    <div id="login_client_forgotpassword_code" class="json-container"></div>
+                </div>
+            </div>
+            <div class="accordion-item">
                 <h2 class="accordion-header" id="login_employe_label">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#login_employe_body" aria-expanded="false" aria-controls="login_employe_body">
                         <h1>POST /login/employe</h1>
@@ -187,6 +212,31 @@
                         </form>
                     </div>
                     <div id="login_employe_code" class="json-container"></div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="login_employe_label">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#login_employe_forgotpassword_body" aria-expanded="false" aria-controls="login_employe_forgotpassword_body">
+                        <h1>POST /login/employe/forgotpassword</h1>
+                    </button>
+                </h2>
+                <div id="login_employe_forgotpassword_body" class="accordion-collapse collapse" aria-labelledby="login_employe_forgotpassword_label" data-bs-parent="#post_accordion">
+                    <div class="accordion-body">
+                        <div>
+                            <textarea disabled>
+{
+    username,
+    password
+}
+                            </textarea>
+                        </div>
+                        <form action="/login/employe/forgotpassword" id="login_employe_forgotpassword">
+                            <input type="text" name="username" placeholder="username" value="0123456789"><br>
+                            <input type="password" name="password" placeholder="password" value="bonjour"><br>
+                            <input type="submit" value="Login">
+                        </form>
+                    </div>
+                    <div id="login_employe_forgotpassword_code" class="json-container"></div>
                 </div>
             </div>
             <div class="accordion-item">
@@ -474,7 +524,9 @@
     <script async>
         const forms = [
             document.getElementById('login_client'),
+            document.getElementById('login_client_forgotpassword'),
             document.getElementById('login_employe'),
+            document.getElementById('login_employe_forgotpassword'),
             document.getElementById('users_new_employe'),
             document.getElementById('users_new_client'),
             document.getElementById('users_client_virement'),
