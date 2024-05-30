@@ -222,6 +222,7 @@ router.route('/:id').get(async (req, res, next) => {
     answer.statusCode = 200;
     const result = await requestDB(req, collections.clients.name, query);
     answer.body = result;
+    console.log(result);
     req.answer = JSON.stringify(answer);
     next();
 })
