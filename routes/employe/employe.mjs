@@ -30,22 +30,21 @@ router.post('/new', async (req, res, next) => {
     } else {
         // Is the ID aleready used ?
         let _id;
-        let merged = [];
+        let merged;
         do {
             _id = new ObjectId();
             merged = [];
-            merged.push(employes.filter(employe => employe._id === _id)[0]);
+            merged.push(employes.filter(employe => employe._id == _id)[0]);
             merged = merged.filter(v => v != undefined);
         } while (merged.length != 0)
         // Is the username aleready used ?
         let username;
-        merged = [username];
-        while (merged.length != 0){
+        do {
             username = String(Math.floor(Math.random()*9_000_000_000)+1_000_000_000);
             merged = [];
             merged.push(employes.filter(employe => employe.username === username)[0]);
             merged = merged.filter(v => v != undefined);
-        }
+        } while (merged.length != 0)
         const newUser = {
             _id,
             username,
@@ -65,10 +64,9 @@ router.post('/new', async (req, res, next) => {
 });
 
 router.route('/:id').get(async (req, res, next) => {
-    const id = process.env.MONGOPASSWORD ? req.params.id : new ObjectId(req.params.id);
     query = [
         {
-            $match: { _id: id }
+            $match: { _id: process.env.MONGOPASSWORD ? req.params.id : new ObjectId(req.params.id) }
         },
         {
             $lookup: {
@@ -103,11 +101,9 @@ router.route('/:id').get(async (req, res, next) => {
         }
         req.body.clients = clients;
     }
-    const data = {
-        id: new ObjectId(req.params.id),
+    const rep = await updateDB(req, collections.employes.name, {
         body: req.body
-    };
-    const rep = await updateDB(req, collections.employes.name, data);
+    });
     answer.statusCode = 200;
     answer.body = {
         message: rep
@@ -116,30 +112,20 @@ router.route('/:id').get(async (req, res, next) => {
     next();
 })
 .delete(async (req, res, next) => {
-    const rep = await fetch(`${req.protocol}://${req.get('host')}/users/employe/${req.params.id}`, {
-        method: 'GET',
-        headers: {
-            'Authorization': req.headers['authorization']
-        } 
-    });
-    const users = await rep.json();
-    // TODO Delete the entry of a given user and dependent elements
-    if (users[0]) {
-        const user = users[0];
+    const users = await requestDB(req, collections.employes.name, [{
+        $match: { _id: process.env.MONGOPASSWORD ? req.params.id : new ObjectId(req.params.id) }
+    }], true);
+    if (users.length > 0) {
         // User is an employee
         // delete employee
-        const ret = await deleteDB(req, collections.employes.name, new ObjectId(req.params.id));
+        answer.body = await deleteDB(req, collections.employes.name, new ObjectId(req.params.id));
         answer.statusCode = 201;
-        answer.body = {
-            message: ret
-        }
     } else {
         answer.statusCode = 400;
         answer.body = {
             message: "Inexistant user"
         }
     }
-
     req.answer = JSON.stringify(answer);
     next();
 });

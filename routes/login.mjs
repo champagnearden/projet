@@ -24,18 +24,27 @@ router.post('/client', async (req, res, next) => {
             }
         ];
         const clients = await requestDB(req, collections.clients.name, query);
-        let bdd_hash = clients.length != 0 ? clients[0].password : "";
-        let token;
+        const bdd_hash = clients.length != 0 ? clients[0].password : "";
         if (await bcrypt.compare(password, bdd_hash)) {
-            token = jwt.sign({ userId: clients[0]._id, username: clients[0].email }, process.env.SECRET_KEY, { expiresIn: '1h' });
+            const token = jwt.sign({ userId: clients[0]._id, username: clients[0].email }, process.env.SECRET_KEY, { expiresIn: '1h' });
+            answer.statusCode = 200;
+            answer.body = {
+                token,
+                _id: clients[0]._id
+            };
+        } else {
+            answer.statusCode = 400;
+            answer.body = {
+                error: "Invalid username or password"
+            };
         }
-        answer.statusCode = 200;
+    } else {
+        answer.statusCode = 400;
         answer.body = {
-            token: token,
-            _id: clients[0]._id
+            error: "Missing username or password"
         };
-        req.answer = JSON.stringify(answer);
     }
+    req.answer = JSON.stringify(answer);
     next();
 });
 
@@ -55,18 +64,27 @@ router.post('/employe', async (req, res, next) => {
             }
         ];
         const employes = await requestDB(req, collections.employes.name, query);
-        let bdd_hash = employes.length != 0 ? employes[0].password : "";
-        let token;
+        const bdd_hash = employes.length != 0 ? employes[0].password : "";
         if (await bcrypt.compare(password, bdd_hash)) {
-            token = jwt.sign({ userId: employes[0]._id, username: employes[0].email }, process.env.SECRET_KEY, { expiresIn: '1h' });
+            const token = jwt.sign({ userId: employes[0]._id, username: employes[0].email }, process.env.SECRET_KEY, { expiresIn: '1h' });
+            answer.statusCode = 200;
+            answer.body = {
+                token,
+                _id: employes[0]._id
+            };
+        } else {
+            answer.statusCode = 400;
+            answer.body = {
+                error: "Invalid username or password"
+            };
         }
-        answer.statusCode = 200;
+    } else {
+        answer.statusCode = 400;
         answer.body = {
-            token: token,
-            _id: employes[0]._id
+            error: "Missing username or password"
         };
-        req.answer = JSON.stringify(answer);
     }
+    req.answer = JSON.stringify(answer);
     next();
 });
 
