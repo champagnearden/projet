@@ -181,7 +181,7 @@ router.post('/virement', async (req, res, next) => {
 router.route('/:id').get(async (req, res, next) => {
     query = [
         {
-            $match: { _id: new ObjectId(req.params.id) }
+            $match: { _id: req.params.id }
         },
         {
             $lookup: {
@@ -222,7 +222,7 @@ router.route('/:id').get(async (req, res, next) => {
     answer.statusCode = 200;
     const result = await requestDB(req, collections.clients.name, query);
     answer.body = result;
-    console.log(result);
+    console.log(collections.clients.name);
     req.answer = JSON.stringify(answer);
     next();
 })
