@@ -11,7 +11,10 @@ import { answer } from './models/answer.mjs';
 const app = express();
 dotenv.config();
 app.set('view engine', 'ejs');
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    optionsSuccessStatus: 200
+}));
 app.use(bodyParser.json());
 app.use(urlencoded({ extended: true }));
 app.use(json());
