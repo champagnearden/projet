@@ -80,9 +80,10 @@ router.post('new/card', async (req, res, next) => {
 
 router.post('/new/account', async (req, res, next) => {
     const { ident, name } = req.body;
-    const accountID = (await insertDB(req, collections.comptes.name, await generateAccountInfos(req, name))).insertedId;
+    // verify that sender is a client
     const _id = process.env.MONGOPASSWORD ? ident : new ObjectId(ident);
-    const accounts = (await requestDB(req, collections.clients.name, [
+    // get the account id and solde of sender
+    query = [
         {
             $match: { _id }
         },
@@ -91,16 +92,35 @@ router.post('/new/account', async (req, res, next) => {
                 comptes: 1
             }
         }
-    ]))[0];
-    if (!accounts.comptes) accounts.comptes = [];
-    accounts.comptes.push(new ObjectId(accountID));
-    answer.body = await updateDB(req, collections.clients.name, {
-        _id,
-        body: {
-            comptes: accounts.comptes
+    ];
+    const isClient = (await requestDB(req, collections.clients.name, query))[0];
+    if (!isClient) {
+        answer.body = {
+            error: "Unable to find your account"
         }
-    });
-    answer.statusCode = 201;
+        answer.statusCode = 400;
+    } else {
+        const accountID = (await insertDB(req, collections.comptes.name, await generateAccountInfos(req, name))).insertedId;
+        const accounts = (await requestDB(req, collections.clients.name, [
+            {
+                $match: { _id }
+            },
+            {
+                $project: {
+                    comptes: 1
+                }
+            }
+        ]))[0];
+        if (!accounts.comptes) accounts.comptes = [];
+        accounts.comptes.push(new ObjectId(accountID));
+        answer.body = await updateDB(req, collections.clients.name, {
+            _id: process.env.MONGOPASSWORD ? ident : new ObjectId(ident),
+            body: {
+                comptes: accounts.comptes
+            }
+        });
+        answer.statusCode = 201;
+    }
     req.answer = JSON.stringify(answer);
     next();
 });
