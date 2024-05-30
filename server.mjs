@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import userRouter from './routes/users.mjs';
 import loginRouter from './routes/login.mjs';
 import clientRouter from './routes/client/client.mjs';
+import employeRouter from './routes/employe/employe.mjs'
 import { connectDB } from './models/bdd.mjs';
 import { answer } from './models/answer.mjs';
 
@@ -24,6 +25,7 @@ app.use(connectDB);
 app.use('/login', loginRouter);
 //app.use(verifToken);
 app.use('/users/client', clientRouter);
+app.use('/users/employe', employeRouter);
 app.use('/users', userRouter);
 app.use(sendAnswer);
 

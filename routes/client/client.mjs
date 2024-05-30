@@ -50,13 +50,14 @@ router.post('/new', async (req, res, next) => {
 });
 
 router.post('new/card', async (req, res, next) => {
-    const { ident, name } = req.body;
+    let { ident, name } = req.body;
 
     let cardId = (await insertDB(req, collections.cartes.name, await generateCardInfos(req, name))).insertedId;
     // get the account id and solde of sender
+    ident = process.env.MONGOPASSWORD ? ident : new ObjectId(ident);
     query = [
         {
-            $match: { _id: new ObjectId(ident)}
+            $match: { _id: ident}
         },
         {
             $project: {
@@ -79,11 +80,12 @@ router.post('new/card', async (req, res, next) => {
 
 router.post('/new/account', async (req, res, next) => {
 
-    const { ident, name } = req.body;
+    let { ident, name } = req.body;
     const accountID = (await insertDB(req, collections.comptes.name, await generateAccountInfos(req, name))).insertedId;
+    ident = process.env.MONGOPASSWORD ? ident : new ObjectId(ident);
     let accounts = (await requestDB(req, collections.clients.name, [
         {
-            $match: { _id: new ObjectId(ident) }
+            $match: { _id: ident }
         },
         {
             $project: {
@@ -110,9 +112,10 @@ router.post('/virement', async (req, res, next) => {
         to_iban = req.body.to_iban_other;
     }
     // get the account id and solde of sender
+    ident = process.env.MONGOPASSWORD ? ident : new ObjectId(ident);
     query = [
         {
-            $match: { _id: new ObjectId(ident)}
+            $match: { _id: ident}
         },
         {
             $lookup: {
@@ -179,9 +182,10 @@ router.post('/virement', async (req, res, next) => {
 });
 
 router.route('/:id').get(async (req, res, next) => {
+    const id = process.env.MONGOPASSWORD ? req.params.id : new ObjectId(req.params.id);
     query = [
         {
-            $match: { _id: req.params.id }
+            $match: { _id: id }
         },
         {
             $lookup: {
@@ -222,7 +226,6 @@ router.route('/:id').get(async (req, res, next) => {
     answer.statusCode = 200;
     const result = await requestDB(req, collections.clients.name, query);
     answer.body = result;
-    console.log(collections.clients.name);
     req.answer = JSON.stringify(answer);
     next();
 })
