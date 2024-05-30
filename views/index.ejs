@@ -56,6 +56,87 @@
         </div>
     </nav>
     <br><br><br>
+    <section id="get-section" class="content-section">
+        <div class="accordion accordion-flush" id="get_accordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="users">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_body" aria-expanded="false" aria-controls="users_body">
+                  <h1>GET /users/</h1>
+                </button>
+            </h2>
+            <div id="users_body" class="accordion-collapse collapse" aria-labelledby="users" data-bs-parent="#get_accordion">
+                <div class="accordion-body">
+                    <form action="/users" id="get_users">
+                        <input type="submit" value="GET">
+                    </form>
+                </div>
+                <div id="get_users_code" class="json-container"></div>
+              </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="users_client">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_client_body" aria-expanded="false" aria-controls="users_client_body">
+                    <h1>GET /users/client</h1>
+                  </button>
+                </h2>
+                <div id="users_client_body" class="accordion-collapse collapse" aria-labelledby="users_client" data-bs-parent="#get_accordion">
+                  <div class="accordion-body">
+                      <form action="/users/client" id="get_users_client">
+                          <input type="submit" value="GET">
+                      </form>
+                  </div>
+                  <div id="get_users_client_code" class="json-container"></div>
+                </div>
+              </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="users_client_id">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_client_id_body" aria-expanded="false" aria-controls="users_client_id_body">
+                  <h1>GET /users/client/${id}</h1>
+                </button>
+              </h2>
+              <div id="users_client_id_body" class="accordion-collapse collapse" aria-labelledby="users_client_id" data-bs-parent="#get_accordion">
+                <div class="accordion-body">
+                    <form action="/users/client/id" id="get_users_client_id">
+                        id: <input type="text" name="ident" id="get_users_client_id_input" placeholder="id" value="" required>
+                        <input type="submit" value="GET">
+                    </form>
+                </div>
+                <div id="get_users_client_id_code" class="json-container"></div>
+              </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="users_employe_label">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_employe_body" aria-expanded="false" aria-controls="users_employe_body">
+                    <h1> GET /users/employe</h1>
+                  </button>
+                </h2>
+                <div id="users_employe_body" class="accordion-collapse collapse" aria-labelledby="users_employe_label" data-bs-parent="#get_accordion">
+                  <div class="accordion-body">
+                      <form action="/users/employe" id="get_users_employe">
+                          <input type="submit" value="GET">
+                      </form>
+                  </div>
+                  <div id="get_users_employe_code" class="json-container"></div>
+                </div>
+              </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="users_employe_id_label">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_employe_id_body" aria-expanded="false" aria-controls="users_employe_id_body">
+                  <h1> GET /users/employe/${id}</h1>
+                </button>
+              </h2>
+              <div id="users_employe_id_body" class="accordion-collapse collapse" aria-labelledby="users_employe_id_label" data-bs-parent="#get_accordion">
+                <div class="accordion-body">
+                    <form action="/users/employe/id" id="get_users_employe_id">
+                        id: <input type="text" name="ident" id="get_users_employe_id_input" placeholder="id" value="" required>
+                        <input type="submit" value="GET">
+                    </form>
+                </div>
+                <div id="get_users_employe_id_code" class="json-container"></div>
+              </div>
+            </div>
+        </div>
+    </section>
     <section id="post-section" class="content-section">
         <div class="accordion accordion-flush" id="post_accordion">
             <div class="accordion-item">
@@ -269,57 +350,6 @@
             </div>
         </div>
     </section>
-    <section id="get-section" class="content-section">
-        <div class="accordion accordion-flush" id="get_accordion">
-            <div class="accordion-item">
-              <h2 class="accordion-header" id="users">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_body" aria-expanded="false" aria-controls="users_body">
-                  <h1>GET /users/</h1>
-                </button>
-            </h2>
-            <div id="users_body" class="accordion-collapse collapse" aria-labelledby="users" data-bs-parent="#get_accordion">
-                <div class="accordion-body">
-                    <form action="/users" id="get_users">
-                        <input type="submit" value="GET">
-                    </form>
-                </div>
-                <div id="get_users_code" class="json-container"></div>
-              </div>
-            </div>
-            <div class="accordion-item">
-              <h2 class="accordion-header" id="users_client_id">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_client_id_body" aria-expanded="false" aria-controls="users_client_id_body">
-                  <h1>GET /users/client/${id}</h1>
-                </button>
-              </h2>
-              <div id="users_client_id_body" class="accordion-collapse collapse" aria-labelledby="users_client_id" data-bs-parent="#get_accordion">
-                <div class="accordion-body">
-                    <form action="/users/client/id" id="get_users_client_id">
-                        id: <input type="text" name="ident" id="get_users_client_id_input" placeholder="id" value="" required>
-                        <input type="submit" value="GET">
-                    </form>
-                </div>
-                <div id="get_users_client_id_code" class="json-container"></div>
-              </div>
-            </div>
-            <div class="accordion-item">
-              <h2 class="accordion-header" id="users_employe_id_label">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_employe_id_body" aria-expanded="false" aria-controls="users_employe_id_body">
-                  <h1> GET /users/employe/${id}</h1>
-                </button>
-              </h2>
-              <div id="users_employe_id_body" class="accordion-collapse collapse" aria-labelledby="users_employe_id_label" data-bs-parent="#get_accordion">
-                <div class="accordion-body">
-                    <form action="/users/employe/id" id="get_users_employe_id">
-                        id: <input type="text" name="ident" id="get_users_employe_id_input" placeholder="id" value="" required>
-                        <input type="submit" value="GET">
-                    </form>
-                </div>
-                <div id="get_users_employe_id_code" class="json-container"></div>
-              </div>
-            </div>
-        </div>
-    </section>
     <section id="delete-section" class="content-section">
         <div class="accordion accordion-flush" id="delete_accordion">
             <div class="accordion-item">
@@ -453,6 +483,8 @@
             document.getElementById('get_users'),
             document.getElementById('get_users_client_id'),
             document.getElementById('get_users_employe_id'),
+            document.getElementById('get_users_client'),
+            document.getElementById('get_users_employe'),
             document.getElementById('delete_users_client_id'),
             document.getElementById('delete_users_employe_id'),
             document.getElementById('put_users_client_id'),

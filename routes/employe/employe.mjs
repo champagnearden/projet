@@ -8,6 +8,33 @@ const router = Router();
 const saltRounds = Number(process.env.SALT_ROUNDS);
 let query;
 
+router.get('/', async (req, res, next) => {
+    query = [
+        {
+            $lookup: {
+                from: collections.clients.name,
+                localField: 'clients',
+                foreignField: '_id',
+                as: 'clients'
+            }
+        },
+        {
+            $project: {
+                username: 1,
+                name: 1,
+                surname: 1,
+                email: 1,
+                role: 1,
+                clients: 1
+            }
+        }
+    ];
+    answer.body = await requestDB(req, collections.employes.name, query);
+    answer.statusCode = 200;
+    req.answer = JSON.stringify(answer);
+    next();
+});
+
 router.post('/new', async (req, res, next) => {
     const { name, surname, email, role, clients, password } = req.body;
     // check if id exists in user base
