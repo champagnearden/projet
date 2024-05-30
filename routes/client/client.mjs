@@ -134,7 +134,6 @@ router.post('/virement', async (req, res, next) => {
     ];
     let accountIds = (await requestDB(req, collections.clients.name, query))[0];
     const sender = accountIds.accounts.find(e => e.iban === from_iban);
-    
     // get the account id and solde of receiver
     query = [
         {
@@ -149,34 +148,39 @@ router.post('/virement', async (req, res, next) => {
     ];
     const receiver = (await requestDB(req, collections.comptes.name, query))[0];
     // set the amount of sender
-    let rep = {}
-    rep.sender = await updateDB(req, collections.comptes.name, {
-        id: sender._id,
-        body: {
-            solde: sender.solde - Number(amount)
+    if (!receiver) {
+        answer.body = {
+            error: "Receiver not found"
         }
-    });
-    // set the amount of receiver
-    rep.receiver = await updateDB(req, collections.comptes.name, {
-        id: receiver._id,
-        body: {
-            solde: Number(receiver.solde) + Number(amount)
-        }
-    });
-    
-    // write the operation
-    const data = {
-        _id: new ObjectId(),
-        montant: Number(amount),
-        compte: from_iban,
-        emetteur: new ObjectId(ident),
-        destination: to_iban,
-        libelle,
-        date: new Date()
-    };
-    rep.operation = await insertDB(req, collections.operations.name, data);
-    answer.statusCode=200;
-    answer.body = rep;
+        answer.statusCode = 400;
+    } else {
+        
+        answer.body.sender = await updateDB(req, collections.comptes.name, {
+            id: sender._id,
+            body: {
+                solde: sender.solde - Number(amount)
+            }
+        });
+        // set the amount of receiver
+        answer.body.receiver = await updateDB(req, collections.comptes.name, {
+            id: receiver._id,
+            body: {
+                solde: Number(receiver.solde) + Number(amount)
+            }
+        });
+        
+        // write the operation
+        answer.body.operation = await insertDB(req, collections.operations.name, {
+            _id: new ObjectId(),
+            montant: Number(amount),
+            compte: from_iban,
+            emetteur: new ObjectId(ident),
+            destination: to_iban,
+            libelle,
+            date: new Date()
+        });
+        answer.statusCode=200;
+    }
     req.answer = JSON.stringify(answer);
     next();
 });

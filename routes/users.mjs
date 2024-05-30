@@ -37,7 +37,17 @@ router.get('/', (req, res, next) => {
         clients: [],
         employes: []
     };
-    requestDB(req, collections.employes.name, []).then( ret => {
+    requestDB(req, collections.employes.name, [{
+        $project: {
+            _id: 1,
+            username: 1,
+            name: 1,
+            surname: 1,
+            email: 1,
+            roles: 1,
+            clients: 1
+        }
+    }]).then( ret => {
         users.employes = ret;
     });
     requestDB(req, collections.clients.name, query)
