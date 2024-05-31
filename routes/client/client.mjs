@@ -191,56 +191,63 @@ router.post('/virement', async (req, res, next) => {
     const accountIds = (await requestDB(req, collections.clients.name, query))[0];
     if (!accountIds) {
         answer.body = {
-            error: "Unable to find your accounts"
+            error: "Unable to find you"
         }
         answer.statusCode = 400;
     } else {
         const sender = accountIds.accounts.find(e => e.iban === from_iban);
-        // get the account id and solde of receiver
-        query = [
-            {
-                $match: { iban: to_iban }
-            },
-            {
-                $project: {
-                    _id: 1,
-                    solde: 1,
-                }
-            }
-        ];
-        const receiver = (await requestDB(req, collections.comptes.name, query))[0];
-        // set the amount of sender
-        if (!receiver) {
+        if (!sender) {
             answer.body = {
-                error: "Receiver not found"
+                error: "Could not find selected account"
             }
             answer.statusCode = 400;
         } else {
-            answer.body.sender = await updateDB(req, collections.comptes.name, {
-                _id: sender._id,
-                body: {
-                    solde: sender.solde - Number(amount)
+            // get the account id and solde of receiver
+            query = [
+                {
+                    $match: { iban: to_iban }
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        solde: 1,
+                    }
                 }
-            });
-            // set the amount of receiver
-            answer.body.receiver = await updateDB(req, collections.comptes.name, {
-                _id: receiver._id,
-                body: {
-                    solde: Number(receiver.solde) + Number(amount)
+            ];
+            const receiver = (await requestDB(req, collections.comptes.name, query))[0];
+            // set the amount of sender
+            if (!receiver) {
+                answer.body = {
+                    error: "Receiver not found"
                 }
-            });
-            
-            // write the operation
-            answer.body.operation = await insertDB(req, collections.operations.name, {
-                _id: new ObjectId(),
-                montant: Number(amount),
-                compte: from_iban,
-                emetteur: _id,
-                destination: to_iban,
-                libelle,
-                date: new Date()
-            });
-            answer.statusCode=200;
+                answer.statusCode = 400;
+            } else {
+                answer.body.sender = await updateDB(req, collections.comptes.name, {
+                    _id: sender._id,
+                    body: {
+                        solde: sender.solde - Number(amount)
+                    }
+                });
+                // set the amount of receiver
+                answer.body.receiver = await updateDB(req, collections.comptes.name, {
+                    _id: receiver._id,
+                    body: {
+                        solde: Number(receiver.solde) + Number(amount)
+                    }
+                });
+                
+                // write the operation
+                answer.body.operation = await insertDB(req, collections.operations.name, {
+                    _id: new ObjectId(),
+                    montant: Number(amount),
+                    compte: from_iban,
+                    emetteur: _id,
+                    destination: to_iban,
+                    libelle,
+                    date: new Date()
+                });
+                answer.statusCode=200;
+            }
         }
     }
     req.answer = JSON.stringify(answer);
