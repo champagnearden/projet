@@ -7,6 +7,7 @@ import { ObjectId } from 'mongodb';
 const router = Router();
 const saltRounds = Number(process.env.SALT_ROUNDS);
 let query;
+answer.body = {};
 
 router.get('/', async (req, res, next) => {
     answer.body = await requestDB(req, collections.clients.name, [
@@ -165,6 +166,7 @@ router.post('/virement', async (req, res, next) => {
     if (to_iban === "OTHER"){
         to_iban = req.body.to_iban_other;
     }
+    answer.body = {};
     // get the account id and solde of sender
     const _id = process.env.MONGOPASSWORD ? ident : new ObjectId(ident);
     query = [
@@ -187,7 +189,7 @@ router.post('/virement', async (req, res, next) => {
         }
     ];
     const accountIds = (await requestDB(req, collections.clients.name, query))[0];
-    if (!accountIds.accounts) {
+    if (!accountIds) {
         answer.body = {
             error: "Unable to find your accounts"
         }
