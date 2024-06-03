@@ -52,4 +52,34 @@ router.get('/', (req, res, next) => {
         });
 });
 
+router.get('/operations', async (req, res, next) => {
+    answer.body = await requestDB(req, collections.operations.name, [
+        {
+            $lookup: {
+                from: collections.clients.name,
+                localField: "emetteur",
+                foreignField: "_id",
+                as: "emetteur"
+            }
+        },
+        {
+            $project: {
+                date: 1,
+                montant: 1,
+                compte: 1,
+                destination: 1,
+                emetteur: {
+                    surname: 1,
+                    name: 1,
+                    email: 1,
+                },
+
+            }
+        }
+    ]);
+    answer.statusCode = 200;
+    req.answer = JSON.stringify(answer);
+    next();
+});
+
 export default router;

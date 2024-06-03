@@ -21,6 +21,7 @@ app.use(bodyParser.json());
 app.use(urlencoded({ extended: true }));
 app.use(json());
 app.use(logger);
+app.use('/favicon.ico', express.static('./logo.png'));
 app.use(connectDB);
 app.use('/login', loginRouter);
 //app.use(verifToken);

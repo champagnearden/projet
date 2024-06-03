@@ -25,37 +25,6 @@ router.get('/', async (req, res, next) => {
     next();
 });
 
-router.get('/operations', async (req, res, next) => {
-    query = [
-        {
-            $lookup: {
-                from: collections.clients.name,
-                localField: "emetteur",
-                foreignField: "_id",
-                as: "emetteur"
-            }
-        },
-        {
-            $project: {
-                date: 1,
-                montant: 1,
-                compte: 1,
-                destination: 1,
-                emetteur: {
-                    surname: 1,
-                    name: 1,
-                    email: 1,
-                },
-
-            }
-        }
-    ];
-    answer.body = await requestDB(req, collections.operations.name, query);
-    answer.statusCode = 200;
-    req.answer = JSON.stringify(answer);
-    next();
-});
-
 router.post('/new', async (req, res, next) => {
     const { name, surname, email, password } = req.body;
     // check if id exists in user base
@@ -96,7 +65,7 @@ router.post('/new', async (req, res, next) => {
     next();
 });
 
-router.post('new/card', async (req, res, next) => {
+router.post('/new/card', async (req, res, next) => {
     const { ident, name } = req.body;
     const cardId = (await insertDB(req, collections.cartes.name, await generateCardInfos(req, name))).insertedId;
     // get the account id and solde of sender
@@ -267,9 +236,10 @@ router.post('/virement', async (req, res, next) => {
     next();
 });
 
-router.route('/:id')/*.get(async (req, res, next) => {
+router.route('/:id').get(async (req, res, next) => {
     const _id = process.env.MONGOPASSWORD ? req.params.id : new ObjectId(req.params.id);
-    query = [
+    answer.statusCode = 200;
+    answer.body = await requestDB(req, collections.clients.name, [
         {
             $match: { _id }
         },
@@ -314,12 +284,10 @@ router.route('/:id')/*.get(async (req, res, next) => {
                 }
             }
         }
-    ];
-    answer.statusCode = 200;
-    answer.body = await requestDB(req, collections.clients.name, query);
+    ]);
     req.answer = JSON.stringify(answer);
     next();
-})*/
+})
 .put(async (req, res, next) => {
     // TODO Verify informations
     const _id = process.env.MONGOPASSWORD ? req.params.id : new ObjectId(req.params.id);

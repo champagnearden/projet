@@ -74,6 +74,21 @@
               </div>
             </div>
             <div class="accordion-item">
+                <h2 class="accordion-header" id="get_users_operations_label">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#get_users_operations_body" aria-expanded="false" aria-controls="get_users_operations_body">
+                    <h1>GET /users/operations</h1>
+                  </button>
+                </h2>
+                <div id="get_users_operations_body" class="accordion-collapse collapse" aria-labelledby="get_users_operations_label" data-bs-parent="#get_accordion">
+                  <div class="accordion-body">
+                      <form action="/users/operations" id="get_users_operations">
+                          <input type="submit" value="GET">
+                      </form>
+                  </div>
+                  <div id="get_users_operations_code" class="json-container"></div>
+                </div>
+            </div>
+            <div class="accordion-item">
                 <h2 class="accordion-header" id="users_client">
                   <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_client_body" aria-expanded="false" aria-controls="users_client_body">
                     <h1>GET /users/client</h1>
@@ -86,21 +101,6 @@
                       </form>
                   </div>
                   <div id="get_users_client_code" class="json-container"></div>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="users_client_operations">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_client_operations_body" aria-expanded="false" aria-controls="users_client_operations_body">
-                    <h1>GET /users/client/operations</h1>
-                  </button>
-                </h2>
-                <div id="users_client_operations_body" class="accordion-collapse collapse" aria-labelledby="users_client_operations" data-bs-parent="#get_accordion">
-                  <div class="accordion-body">
-                      <form action="/users/client/operations" id="get_users_client_operations">
-                          <input type="submit" value="GET">
-                      </form>
-                  </div>
-                  <div id="get_users_client_operations_code" class="json-container"></div>
                 </div>
             </div>
             <div class="accordion-item">
@@ -543,7 +543,7 @@
             document.getElementById('users_new_client_card'),
             document.getElementById('users_new_client_account'),
             document.getElementById('get_users'),
-            document.getElementById('get_users_client_operations'),
+            document.getElementById('get_users_operations'),
             document.getElementById('get_users_client_id'),
             document.getElementById('get_users_employe_id'),
             document.getElementById('get_users_client'),
