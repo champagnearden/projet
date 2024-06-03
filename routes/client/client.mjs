@@ -12,32 +12,45 @@ answer.body = {};
 router.get('/', async (req, res, next) => {
     answer.body = await requestDB(req, collections.clients.name, [
         {
-            $lookup: {
-                from: collections.comptes.name,
-                localField: "comptes",
-                foreignField: "_id",
-                as: "comptes"
-            }
-        },
-        {
-            $lookup: {
-                from: collections.cartes.name,
-                localField: "cartes",
-                foreignField: "_id",
-                as: "cartes"
-            }
-        },
-        {
             $project: {
                 _id: 1,
                 name: 1,
                 surname: 1,
-                email: 1,
-                cartes: 1,
-                comptes: 1
+                email: 1
             }
         }
     ]);
+    answer.statusCode = 200;
+    req.answer = JSON.stringify(answer);
+    next();
+});
+
+router.get('/operations', async (req, res, next) => {
+    query = [
+        {
+            $lookup: {
+                from: collections.clients.name,
+                localField: "emetteur",
+                foreignField: "_id",
+                as: "emetteur"
+            }
+        },
+        {
+            $project: {
+                date: 1,
+                montant: 1,
+                compte: 1,
+                destination: 1,
+                emetteur: {
+                    surname: 1,
+                    name: 1,
+                    email: 1,
+                },
+
+            }
+        }
+    ];
+    answer.body = await requestDB(req, collections.operations.name, query);
     answer.statusCode = 200;
     req.answer = JSON.stringify(answer);
     next();
@@ -254,7 +267,7 @@ router.post('/virement', async (req, res, next) => {
     next();
 });
 
-router.route('/:id').get(async (req, res, next) => {
+router.route('/:id')/*.get(async (req, res, next) => {
     const _id = process.env.MONGOPASSWORD ? req.params.id : new ObjectId(req.params.id);
     query = [
         {
@@ -280,7 +293,7 @@ router.route('/:id').get(async (req, res, next) => {
             $lookup: {
                 from: collections.operations.name,
                 localField: '_id',
-                foreignField: 'compte',
+                foreignField: 'emetteur',
                 as: 'operations'
             }
         },
@@ -292,15 +305,21 @@ router.route('/:id').get(async (req, res, next) => {
                 email: 1,
                 cards: 1,
                 accounts: 1,
-                operations: 1
-            }   
+                operations: {
+                    montant: 1,
+                    compte: 1,
+                    destination: 1,
+                    libelle: 1,
+                    date: 1
+                }
+            }
         }
     ];
     answer.statusCode = 200;
     answer.body = await requestDB(req, collections.clients.name, query);
     req.answer = JSON.stringify(answer);
     next();
-})
+})*/
 .put(async (req, res, next) => {
     // TODO Verify informations
     const _id = process.env.MONGOPASSWORD ? req.params.id : new ObjectId(req.params.id);
@@ -365,7 +384,7 @@ router.route('/:id').get(async (req, res, next) => {
             }
         };
         answer.body.client = await deleteDB(req, collections.clients.name, _id);
-        answer.headers = 201;
+        answer.statusCode = 201;
         answer.body.message = `Successfully deleted client ${req.params.id} !`;
     } else {
         answer.statusCode = 400;
@@ -444,7 +463,7 @@ function generateIban(){
     for (let i = 0; i < 25; i++) {
         iban += Math.floor(Math.random() * 10);
     }
-    return iban;
+    return iban.toUpperCase();
 }
 
 function generateCardNumber(){

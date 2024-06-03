@@ -7,29 +7,11 @@ let query;
 router.get('/', (req, res, next) => {
     query = [
         {
-            $lookup: {
-                from: collections.comptes.name,
-                localField: 'comptes',
-                foreignField: '_id',
-                as: 'comptes'
-            }
-        },
-        {
-            $lookup: {
-                from: collections.cartes.name,
-                localField: 'cartes',
-                foreignField: '_id',
-                as: 'cartes'
-            }
-        },
-        {
             $project: {
                 _id: 1,
                 name: 1,
                 surname: 1,
-                email: 1,
-                cartes: 1,
-                comptes: 1
+                email: 1
             }   
         }
     ];

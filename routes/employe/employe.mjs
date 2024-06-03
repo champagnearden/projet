@@ -25,7 +25,13 @@ router.get('/', async (req, res, next) => {
                 surname: 1,
                 email: 1,
                 role: 1,
-                clients: 1
+                clients: {
+                    surname: 1,
+                    name: 1,
+                    email: 1,
+                    comptes: 1,
+                    cartes: 1
+                }
             }
         }
     ];
