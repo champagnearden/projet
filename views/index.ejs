@@ -581,14 +581,15 @@
                     delete formValues['ident'];
                 }
                 const resp = await fetch (form.action, {
-                    method: method,
-                    headers: {
-                        'Authorization': 'Bearer '+token,
-                        'Content-type': 'application/json'
-                    },
-                    body: method === "get" ? undefined : JSON.stringify(formValues)
-                });
-                renderJson(elem, await resp.json());
+                        method: method,
+                        headers: {
+                            'Authorization': 'Bearer '+token,
+                            'Content-type': 'application/json'
+                        },
+                        body: method === "get" ? undefined : JSON.stringify(formValues)
+                    })
+                    .then( async (resp) => renderJson(elem, resp))
+                    .catch( async (resp) => renderJson(elem, resp));
                 submit.disabled = false;
             }); 
         }
