@@ -52,8 +52,8 @@ router.post('/new', async (req, res, next) => {
             name,
             surname, 
             email,
-            cartes: [new ObjectId(cardId)],
-            comptes: [new ObjectId(accountId)],
+            cartes: [cardId],
+            comptes: [accountId],
             password: await bcrypt.hash(password, saltRounds)
         });
         answer.body = {
