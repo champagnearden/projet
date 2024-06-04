@@ -588,8 +588,8 @@
                         },
                         body: method === "get" ? undefined : JSON.stringify(formValues)
                     })
-                    .then( async (resp) => renderJson(elem, resp))
-                    .catch( async (resp) => renderJson(elem, resp));
+                    .then( async (resp) => renderJson(elem, await resp.json()))
+                    .catch( async (resp) => renderJson(elem, await resp.json()));
                 submit.disabled = false;
             }); 
         }
