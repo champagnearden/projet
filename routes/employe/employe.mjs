@@ -102,27 +102,13 @@ router.route('/:id').get(async (req, res, next) => {
             $match: { _id: process.env.MONGOPASSWORD ? req.params.id : new ObjectId(req.params.id) }
         },
         {
-            $lookup: {
-                from: collections.clients.name,
-                localField: 'clients',
-                foreignField: '_id',
-                as: 'clients'
-            }
-        },
-        {
             $project: {
                 username: 1,
                 name: 1,
                 surname: 1,
                 email: 1,
                 role: 1,
-                clients: {
-                    surname: 1,
-                    name: 1,
-                    email: 1,
-                    comptes: 1,
-                    cartes: 1
-                }
+                clients: 1
             }
         }
     ];
