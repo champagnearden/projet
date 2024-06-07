@@ -248,7 +248,7 @@ router.route('/:id').get(async (req, res, next) => {
                 from: collections.comptes.name,
                 localField: 'comptes',
                 foreignField: '_id',
-                as: 'accounts'
+                as: 'comptes'
             }
         },
         {
@@ -274,7 +274,7 @@ router.route('/:id').get(async (req, res, next) => {
                 surname: 1,
                 email: 1,
                 cards: 1,
-                accounts: 1,
+                comptes: 1,
                 operations: {
                     montant: 1,
                     compte: 1,
