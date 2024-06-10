@@ -11,27 +11,13 @@ let query;
 router.get('/', async (req, res, next) => {
     query = [
         {
-            $lookup: {
-                from: collections.clients.name,
-                localField: 'clients',
-                foreignField: '_id',
-                as: 'clients'
-            }
-        },
-        {
             $project: {
                 username: 1,
                 name: 1,
                 surname: 1,
                 email: 1,
                 role: 1,
-                clients: {
-                    surname: 1,
-                    name: 1,
-                    email: 1,
-                    comptes: 1,
-                    cartes: 1
-                }
+                clients: 1
             }
         }
     ];
@@ -119,19 +105,33 @@ router.route('/:id').get(async (req, res, next) => {
 })
 .put(async (req, res, next) => {
     // TODO Verify informations
-    if (req.body.clients){
-        let clients=[];
-        for (let client of req.body.clients) {
-            clients.push(new ObjectId(client));
+    try {
+        if (req.body.clients){
+            let clients=[];
+            for (let client of req.body.clients) {
+                clients.push(new ObjectId(client));
+            }
+            req.body.clients = clients;
         }
-        req.body.clients = clients;
-    }
-    const rep = await updateDB(req, collections.employes.name, {
-        body: req.body
-    });
-    answer.statusCode = 200;
-    answer.body = {
-        message: rep
+        await updateDB(req, collections.employes.name, {
+            body: req.body,
+            _id: process.env.MONGOPASSWORD ? req.params.id : new ObjectId(req.params.id)
+        }).then(rep => {
+            answer.statusCode = 200;
+            answer.body = {
+                message: rep
+            }
+        }).catch(e => {
+            answer.statusCode = 400;
+            answer.body = {
+                error: e.errorResponse.errmsg
+            }
+        });
+    } catch (error) {
+        answer.statusCode = 400;
+        answer.body = {
+            error: error
+        }
     }
     req.answer = JSON.stringify(answer);
     next();

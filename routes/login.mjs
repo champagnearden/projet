@@ -58,8 +58,7 @@ router.post('client/forgotpassword', async (req, res, next) => {
         {
             $project: {
                 password: 1,
-                _id: 1,
-                email: 1
+                _id: 1
             }
         }
     ];
@@ -99,18 +98,21 @@ router.post('/employe', async (req, res, next) => {
                 $project: {
                     password: 1,
                     _id: 1,
-                    email: 1
+                    email: 1,
+                    role: 1
                 }   
             }
         ];
         const employes = await requestDB(req, collections.employes.name, query);
+        const role = employes.length != 0 ? employes[0].role : "";
         const bdd_hash = employes.length != 0 ? employes[0].password : "";
         if (await bcrypt.compare(password, bdd_hash)) {
             const token = jwt.sign({ userId: employes[0]._id, username: employes[0].username }, process.env.SECRET_KEY, { expiresIn: '1h' });
             answer.statusCode = 200;
             answer.body = {
                 token,
-                _id: employes[0]._id
+                _id: employes[0]._id,
+                role
             };
         } else {
             answer.statusCode = 400;

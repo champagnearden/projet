@@ -305,11 +305,18 @@ router.route('/:id').get(async (req, res, next) => {
         }
         req.body.cards = newElements;
     }
-    answer.body = await updateDB(req, collections.clients.name, {
+    await updateDB(req, collections.clients.name, {
         _id,
         body: req.body
+    }).then(resp => {
+        answer.body = resp;
+        answer.statusCode = 201;
+    }).catch(e => {
+        answer.statusCode = 400;
+        answer.body = {
+            error: e.errorResponse.errmsg
+        }
     });
-    answer.statusCode = 200;
     req.answer = JSON.stringify(answer);
     next();
 })
