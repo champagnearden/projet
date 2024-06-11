@@ -24,7 +24,7 @@ app.use(logger);
 app.use('/favicon.ico', express.static('./logo.png'));
 app.use(connectDB);
 app.use('/login', loginRouter);
-//app.use(verifToken);
+app.use(verifToken);
 app.use('/users/client', clientRouter);
 app.use('/users/employe', employeRouter);
 app.use('/users', userRouter);
@@ -67,13 +67,22 @@ function verifToken(req, res, next) {
         next();
     } else if(token) {
         jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
-            if (err) return res.status(403).send('Invalid token');
+            if (err) {
+                answer.statusCode = 403;
+                answer.body = { error: 'Invalid token' };
+                req.answer = JSON.stringify(answer);
+                sendAnswer(req, res, next);
+            } else {
+                req.user = user; // Store user information in req.user
+                next(); // Proceed to the next middleware or route handler
+            }
     
-            req.user = user; // Store user information in req.user
-            next(); // Proceed to the next middleware or route handler
         });
     } else {
-        return res.status(401).send('No token provided');
+        answer.statusCode = 401; // Unauthorized
+        answer.body = { error: 'No token provided' };
+        req.answer = JSON.stringify(answer); 
+        return sendAnswer(req, res, next);
     }
 }
 
