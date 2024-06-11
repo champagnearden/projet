@@ -609,13 +609,13 @@
         });
 
         async function login() {
-            const resp = fetch('/login/client', {
+            const resp = fetch('/login/employe', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    username: 'jude.bocq@gmail.com',
+                    username: '0123456789',
                     password: 'bonjour'
                 })
             }).then(async resp => {

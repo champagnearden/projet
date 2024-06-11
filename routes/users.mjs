@@ -26,11 +26,17 @@ router.get('/', (req, res, next) => {
             name: 1,
             surname: 1,
             email: 1,
-            roles: 1,
+            role: 1,
             clients: 1
         }
     }]).then( ret => {
         users.employes = ret;
+    })
+    .catch((err) => {
+        answer.statusCode = 500;
+        answer.body = err;
+        req.answer = JSON.stringify(answer);
+        next();
     });
     requestDB(req, collections.clients.name, query)
         .then((userList) => {
