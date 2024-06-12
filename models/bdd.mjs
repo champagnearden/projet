@@ -60,7 +60,8 @@ const collections = {
             numero: "String",
             cvc: "String",
             code: "String",
-            name: "String"
+            name: "String",
+            blocked: "Boolean"
         }
     },
     clients: {
@@ -71,8 +72,9 @@ const collections = {
             surname: "String",
             email: "String",
             password: "String",
-            carte: "ObjectId", 
-            comptes: "ObjectId[]"
+            cartes: "ObjectId[]", 
+            comptes: "ObjectId[]",
+            beneficiaires: "String[]"
         }
     },
     comptes: {
@@ -103,9 +105,10 @@ const collections = {
             _id: "ObjectId",
             date: "String",
             montant: "String",
-            destination: "ObjectId",//compte de destination
+            destination: "String",//compte de destination
             emetteur: "ObjectId",//compte émettant
-            libelle: "String"
+            libelle: "String",
+            compte: "String"
         }
     }
 }

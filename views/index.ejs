@@ -431,6 +431,28 @@
               </div>
             </div>
             <div class="accordion-item">
+                <h2 class="accordion-header" id="delete_users_client_id_label">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#delete_users_client_beneficiaire_id_body" aria-expanded="false" aria-controls="delete_users_client_beneficiaire_id_body">
+                    <h1>DELETE /users/client/beneficiaire/${id}</h1>
+                  </button>
+                </h2>
+                <div id="delete_users_client_beneficiaire_id_body" class="accordion-collapse collapse" aria-labelledby="delete_users_client_beneficiaire_id_label" data-bs-parent="#delete_accordion">
+                  <div class="accordion-body">
+                    <div>
+                        <textarea disabled>
+    The id field is the index of beneficiaire to delete.
+    The user affected is the client connected.
+                        </textarea>
+                    </div>
+                      <form action="/users/client/beneficiaire/id" id="delete_users_client_beneficiaire_id">
+                          id: <input type="text" value="" name="ident" id="delete_client_beneficiaire_id_input" placeholder="id" required>
+                          <input type="submit" value="DELETE">
+                      </form>
+                  </div>
+                  <div id="delete_users_client_beneficiaire_id_code" class="json-container"></div>
+                </div>
+            </div>
+            <div class="accordion-item">
                 <h2 class="accordion-header" id="delete_users_employe_id_label">
                   <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#delete_users_employe_id_body" aria-expanded="false" aria-controls="delete_users_employe_id_body">
                     <h1>DELETE /users/employe/${id}</h1>
@@ -489,6 +511,36 @@
                 </div>
                 <div id="put_users_client_id_code" class="json-container"></div>
               </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="users_new_client_beneficiaire_id_label">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_new_client_beneficiaire_id_body" aria-expanded="false" aria-controls="users_new_client_beneficiaire_id_body">
+                        <h1>PUT /users/client/new/beneficiaire/:id</h1>
+                    </button>
+                </h2>
+                <div id="users_new_client_beneficiaire_id_body" class="accordion-collapse collapse" aria-labelledby="users_new_client_beneficiaire_id_label" data-bs-parent="#put_accordion">
+                    <div class="accordion-body">
+                        <div>
+                            <textarea disabled>
+    {
+        name,
+        surname,
+        iban,
+        account
+    }
+                            </textarea>
+                        </div>
+                        <form action="/users/client/new/beneficiaire/id" id="users_new_client_beneficiaire_id">
+                            id (owner): <input type="text" name="ident" placeholder="id" required><br>
+                            <input type="text" name="name" placeholder="name" required><br>
+                            <input type="text" name="surname" placeholder="surname" required><br>
+                            <input type="text" name="iban" placeholder="iban" required><br>
+                            <input type="text" name="account" placeholder="account" required><br>
+                            <input type="submit" value="Create">
+                        </form>
+                    </div>
+                    <div id="users_new_client_beneficiaire_id_code" class="json-container"></div>
+                </div>
             </div>
             <div class="accordion-item">
                 <h2 class="accordion-header" id="put_users_employe_id_label">
@@ -552,15 +604,17 @@
             document.getElementById('get_users_employe'),
             document.getElementById('delete_users_client_id'),
             document.getElementById('delete_users_employe_id'),
+            document.getElementById('delete_users_client_beneficiaire_id'),
             document.getElementById('put_users_client_id'),
-            document.getElementById('put_users_employe_id')
+            document.getElementById('put_users_employe_id'),
+            document.getElementById('users_new_client_beneficiaire_id'),
         ];
         const selects_multiple_ids = [
             "clients",
             "accounts",
             "cards"
         ]
-        const token = sessionStorage.getItem('token');
+        let token;
         for (let form of forms) {
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -590,7 +644,11 @@
                         },
                         body: method === "get" ? undefined : JSON.stringify(formValues)
                     })
-                    .then( async (resp) => renderJson(elem, await resp.json()))
+                    .then( async (resp) => {
+                        const rep = await resp.json();
+                        if (rep.token) token = rep.token;
+                        renderJson(elem, await rep)
+                    })
                     .catch( async (resp) => renderJson(elem, await resp.json()));
                 submit.disabled = false;
             }); 
@@ -622,7 +680,7 @@
                 })
             }).then(async resp => {
                 const data = await resp.json();
-                sessionStorage.setItem('token', data.token);
+                token = data.token;
             });
         }
 

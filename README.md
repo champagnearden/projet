@@ -196,6 +196,7 @@ Using these methods, you can comprehensively test the API to ensure it behaves a
 ### DELETE Endpoints
 
 - **DELETE /users/client/:id** - Delete a client by ID.
+- **DELETE /users/client/beneficiaire/:id** - Delete the IDth beneficiaire of the logged in client.
 - **DELETE /users/employe/:id** - Delete an employee by ID.
 
 ### PUT Endpoints
@@ -209,6 +210,16 @@ Using these methods, you can comprehensively test the API to ensure it behaves a
       "email": "updatedemail@example.com",
       "accounts": ["account_id_1", "account_id_2"],
       "cards": ["card_id_1", "card_id_2"]
+  }
+  ```
+- **PUT /users/client/beneficiaire/:id** - Update client beneficiaires.
+
+  ```json
+  {
+      "name": "NewBeneficiaireName",
+      "surname": "NewBeneficiaireSurname",
+      "iban": "NewBeneficiaireIban",
+      "account": "NewBeneficiaireAccountName"
   }
   ```
 - **PUT /users/employe/:id** - Update employee details.

@@ -142,6 +142,69 @@ router.post('/new/account', async (req, res, next) => {
     next();
 });
 
+router.put('/new/beneficiaire/:id', async (req, res, next) => {
+    const { name, surname, iban, account } = req.body;
+    // get the account id and solde of sender
+    const _id = process.env.MONGOPASSWORD ? req.params.id : new ObjectId(req.params.id);
+    query = [
+        {
+            $match: { _id }
+        },
+        {
+            $project: {
+                beneficiaires: 1
+            }
+        }
+    ];
+    const user = (await requestDB(req, collections.clients.name, query))[0];
+    if (!user.beneficiaires) user.beneficiaires = [];
+    user.beneficiaires.push({
+        name,
+        surname,
+        account,
+        iban
+    });
+    answer.body = await updateDB(req, collections.clients.name, {
+        _id,
+        body: user
+    });
+    answer.statusCode = 201;
+    req.answer = JSON.stringify(answer);
+    next();
+});
+
+router.delete('/beneficiaire/:id', async (req, res, next) => {
+    const _id = process.env.MONGOPASSWORD ? req.user.userId : new ObjectId(req.user.userId);
+    // get the account id and solde of sender
+    query = [
+        {
+            $match: { _id }
+        },
+        {
+            $project: {
+                beneficiaires: 1
+            }
+        }
+    ];
+    const user = (await requestDB(req, collections.clients.name, query))[0];
+    if (!user && !user.beneficiaires) user.beneficiaires = [];
+    if (user.beneficiaires.length > Number(req.params.id)) {
+        user.beneficiaires.splice(Number(req.params.id), 1);
+        answer.body = await updateDB(req, collections.clients.name, {
+            _id,
+            body: user
+        });
+        answer.statusCode = 201;
+    } else {
+        answer.body = {
+            error: "Beneficiaire not found"
+        }
+        answer.statusCode = 400;
+    }
+    req.answer = JSON.stringify(answer);
+    next();
+});
+
 router.post('/virement', async (req, res, next) => {
     const { ident, amount, from_iban, libelle } = req.body;
     let to_iban = req.body.to_iban;
@@ -275,6 +338,7 @@ router.route('/:id').get(async (req, res, next) => {
                 email: 1,
                 cards: 1,
                 comptes: 1,
+                beneficiaires: 1,
                 operations: {
                     montant: 1,
                     compte: 1,
