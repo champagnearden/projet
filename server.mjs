@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
 import userRouter from './routes/users.mjs';
 import loginRouter from './routes/login.mjs';
 import clientRouter from './routes/client/client.mjs';
@@ -11,6 +12,16 @@ import { connectDB } from './models/bdd.mjs';
 import { answer } from './models/answer.mjs';
 
 const app = express();
+const transporter = nodemailer.createTransport({
+    port: 465,               // true for 465, false for other ports
+    host: "partage.univ-ubs.fr",
+        auth: {
+            user: process.env.EMAIL,
+            pass: 'Ds.N.et8shgy2/7',
+        },
+    secure: true
+});
+
 dotenv.config();
 app.set('view engine', 'ejs');
 app.use(cors({
@@ -22,6 +33,32 @@ app.use(urlencoded({ extended: true }));
 app.use(json());
 app.use(logger);
 app.use('/favicon.ico', express.static('./logo.png'));
+
+app.post('/send-email', async (req, res, next) => {
+
+    const mailOptions = {
+        from: `"${req.body.name}" <${process.env.EMAIL}>`,
+        to: req.body.email,
+        subject: req.body.subject,
+        text: req.body.text,
+        html: `<b>${req.body.text}</b>`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            answer.statusCode = 500;
+            answer.body = {
+                error: error.response
+            }
+        } else {
+            answer.statusCode = 200;
+            answer.body = info;
+        }
+        req.answer = JSON.stringify(answer);
+        next();
+    });
+});
+
 app.use(connectDB);
 app.use('/login', loginRouter);
 app.use(verifToken);
@@ -43,6 +80,8 @@ app.get('/', (req, res, next) => {
     next();
 });
 
+
+
 function logger(req, res, next) {
     req.requestId = Math.random().toString(16).slice(2);
     console.log(`[${new Date().toUTCString()}] (${req.requestId}) ${req.method} ${req.url}`);
@@ -63,7 +102,7 @@ function verifToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader ? authHeader.split(' ')[1] : null;
     const path = req.originalUrl;
-    if (path == '/login/client' || path == '/login/employe' || path == '/' || path == "/users/client/new") {
+    if (path == '/login/client' || path == '/login/employe' || path == '/' || path == "/users/client/new" || "/send-email") {
         next();
     } else if(token) {
         jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
