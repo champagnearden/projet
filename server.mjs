@@ -17,7 +17,7 @@ const transporter = nodemailer.createTransport({
     host: "partage.univ-ubs.fr",
         auth: {
             user: process.env.EMAIL,
-            pass: 'Ds.N.et8shgy2/7',
+            pass: process.env.EMAIL_PASSWORD,
         },
     secure: true
 });
