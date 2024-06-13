@@ -212,6 +212,14 @@ Using these methods, you can comprehensively test the API to ensure it behaves a
       "cards": ["card_id_1", "card_id_2"]
   }
   ```
+- **PUT /users/client/account/:id** - Update account details.
+
+  ```json
+  {
+      "name": "UpdatedName",
+      "iban": "UpdatedIban"
+  }
+  ```
 - **PUT /users/client/beneficiaire/:id** - Update client beneficiaires.
 
   ```json

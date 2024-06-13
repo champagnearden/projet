@@ -62,8 +62,8 @@ function sendAnswer(req, res, next) {
 function verifToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader ? authHeader.split(' ')[1] : null;
-    const path = req.originalUrl.split('/')[1];
-    if (path == 'login' || path == '') {
+    const path = req.originalUrl;
+    if (path == '/login/client' || path == '/login/employe' || path == '/' || path == "/users/client/new") {
         next();
     } else if(token) {
         jwt.verify(token, process.env.SECRET_KEY, (err, user) => {

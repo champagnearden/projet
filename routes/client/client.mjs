@@ -48,18 +48,24 @@ router.post('/new', async (req, res, next) => {
     } else {
         const cardId = await insertDB(req, collections.cartes.name, await generateCardInfos(req, "Visa"));
         const accountId = await insertDB(req, collections.comptes.name, await generateAccountInfos(req, "Courant"));
-        const userId = await insertDB(req, collections.clients.name, {
+        await insertDB(req, collections.clients.name, {
             name,
             surname, 
             email,
-            cartes: [cardId],
-            comptes: [accountId],
+            cartes: [cardId.insertedId],
+            comptes: [accountId.insertedId],
             password: await bcrypt.hash(password, saltRounds)
+        }).then(data => {
+            answer.body = {
+                _id: data.insertedId,
+            }
+            answer.statusCode = 201;
+        }).catch( err => {
+            answer.body = {
+                error: err.errorResponse.errmsg
+            }
+            answer.statusCode = 400;
         });
-        answer.body = {
-            _id: userId,
-        }
-        answer.statusCode = 201;
     }
     req.answer = JSON.stringify(answer);
     next();
@@ -169,6 +175,47 @@ router.put('/new/beneficiaire/:id', async (req, res, next) => {
         body: user
     });
     answer.statusCode = 201;
+    req.answer = JSON.stringify(answer);
+    next();
+});
+
+router.put('/account/:id', async (req, res, next) => {
+    const { name, iban } = req.body;
+    const _id = process.env.MONGOPASSWORD ? req.params.id : new ObjectId(req.params.id);
+    await updateDB(req, collections.comptes.name, {
+        _id,
+        body: {
+            name,
+            iban
+        }
+    }).then( data => {
+        answer.body = data;
+        answer.statusCode = 201;
+    }).catch( err => {
+        answer.body = {
+            error: err.errorResponse.errmsg
+        };
+        answer.statusCode = 400;
+    });
+    req.answer = JSON.stringify(answer);
+    next();
+});
+
+router.put('/card/:id', async (req, res, next) => {
+    const { name, number, validite, cvc, code, blocked } = req.body;
+    const _id = process.env.MONGOPASSWORD ? req.params.id : new ObjectId(req.params.id);
+    await updateDB(req, collections.cartes.name, {
+        _id,
+        body: req.body
+    }).then( data => {
+        answer.body = data;
+        answer.statusCode = 201;
+    }).catch( err => {
+        answer.body = {
+            error: err.errorResponse.errmsg
+        };
+        answer.statusCode = 400;
+    });
     req.answer = JSON.stringify(answer);
     next();
 });
@@ -386,40 +433,33 @@ router.route('/:id').get(async (req, res, next) => {
 })
 .delete(async (req, res, next) => {
     const _id = process.env.MONGOPASSWORD ? req.params.id : new ObjectId(req.params.id);
-    const users = await requestDB(req, collections.clients.name, [
+    query = [
         {
             $match: { _id }
         },
         {
             $project: {
-                cards: 1,
-                accounts: 1,
-                operations: 1,
-                client: 1
+                _id: 1,
+                cartes: 1,
+                comptes: 1
             }
         }
-    ]);
+    ];
+    const users = await requestDB(req, collections.clients.name, query);
     if (users[0]) {
         // User is a client
         // delete cards, accounts, operations, client
         const user = users[0];
-        if (user.cards){
-            answer.body.cards = [];
-            for (let carte of user.cards){
-                answer.body.cards.push(await deleteDB(req, collections.cartes.name, carte));
-                
+        if (user.cartes){
+            answer.body.cartes = [];
+            for (let carte of user.cartes){
+                answer.body.cartes.push(await deleteDB(req, collections.cartes.name, carte));
             }
         };
-        if (user.accounts){
-            answer.body.accounts = [];
-            for (let account of user.accounts) {
-                answer.body.accounts.push(await deleteDB(req, collections.comptes.name, account));
-            }
-        };
-        if (user.operations){
-            answer.body.operations = [];
-            for(let op of user.operations) {
-                answer.body.operations.push(await deleteDB(req, collections.operations.name, op));
+        if (user.comptes){
+            answer.body.comptes = [];
+            for (let account of user.comptes) {
+                answer.body.comptes.push(await deleteDB(req, collections.comptes.name, account));
             }
         };
         answer.body.client = await deleteDB(req, collections.clients.name, _id);
@@ -436,8 +476,11 @@ router.route('/:id').get(async (req, res, next) => {
 });
 
 async function generateCardInfos(req, name){
-    const currentDate = new Date();
-    const expiracy = new Date(currentDate.getFullYear() + 3, currentDate.getMonth(), currentDate.getDate()).toLocaleDateString('en-GB');
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const expiracy = `${year}-${month}-${day}`;
     let numero, _id;
     let merged = [numero];
     const cards = await requestDB(req, collections.cartes.name, [
@@ -465,6 +508,7 @@ async function generateCardInfos(req, name){
         cvc: Math.floor(Math.random()*999),
         code: Math.floor(Math.random()*9999),
         name,
+        blocked: false
     };
 }
 

@@ -513,9 +513,35 @@
               </div>
             </div>
             <div class="accordion-item">
+                <h2 class="accordion-header" id="put_users_client_account_id_label">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#put_users_client_account_id_body" aria-expanded="false" aria-controls="put_users_client_account_id_body">
+                    <h1>PUT /users/client/account/${id}</h1>
+                  </button>
+                </h2>
+                <div id="put_users_client_account_id_body" class="accordion-collapse collapse" aria-labelledby="put_users_client_account_id_label" data-bs-parent="#put_accordion">
+                  <div class="accordion-body">
+                      <div>
+                          <textarea disabled>
+  {
+    name,
+    iban
+  }
+                          </textarea>
+                      </div>
+                      <form action="/users/client/account/id" id="put_users_client_account_id">
+                          id: <input type="text" value="" name="ident" id="put_client_account_id_input" placeholder="id" required><br>
+                          <input type="text" name="name" placeholder="name"><br>
+                          <input type="text" name="iban" placeholder="iban"><br>
+                          <input type="submit" value="Update">
+                      </form>
+                  </div>
+                  <div id="put_users_client_account_id_code" class="json-container"></div>
+                </div>
+              </div>
+            <div class="accordion-item">
                 <h2 class="accordion-header" id="users_new_client_beneficiaire_id_label">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#users_new_client_beneficiaire_id_body" aria-expanded="false" aria-controls="users_new_client_beneficiaire_id_body">
-                        <h1>PUT /users/client/new/beneficiaire/:id</h1>
+                        <h1>PUT /users/client/new/beneficiaire/${id}</h1>
                     </button>
                 </h2>
                 <div id="users_new_client_beneficiaire_id_body" class="accordion-collapse collapse" aria-labelledby="users_new_client_beneficiaire_id_label" data-bs-parent="#put_accordion">

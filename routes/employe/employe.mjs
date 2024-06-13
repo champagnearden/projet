@@ -113,6 +113,7 @@ router.route('/:id').get(async (req, res, next) => {
             }
             req.body.clients = clients;
         }
+        console.log(req.body);
         await updateDB(req, collections.employes.name, {
             body: req.body,
             _id: process.env.MONGOPASSWORD ? req.params.id : new ObjectId(req.params.id)
