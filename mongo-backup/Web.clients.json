@@ -1,0 +1,25 @@
+[{
+  "_id": {
+    "$oid": "664509ae87732bf815449adf"
+  },
+  "name": "Jude",
+  "surname": "Bocquart",
+  "email": "jude.bocq@gmail.com",
+  "cartes": [
+    {
+      "$oid": "66450a1787732bf815449ae3"
+    },
+    {
+      "$oid": "66577d8392498e31a9958e6c"
+    }
+  ],
+  "comptes": [
+    {
+      "$oid": "66577db492498e31a9958e6d"
+    },
+    {
+      "$oid": "6658a45b6d0d3dd9d143d513"
+    }
+  ],
+  "password": "$2a$08$Kt9mxafYIpFVk77TcOArjOPlT2./YHTRTLrReh7BbwVVXpT9cXYv6"
+}]

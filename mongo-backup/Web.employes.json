@@ -1,0 +1,44 @@
+[{
+  "_id": {
+    "$oid": "6645074f87732bf815449ad1"
+  },
+  "username": "0123456789",
+  "name": "Smith",
+  "surname": "Marcel",
+  "email": "marcel@yopmail.com",
+  "password": "$2a$08$p8cBPrd33qym.ZLmUD/.q.RX6YXLeknupcLCXpAHCxg.iqfvdEWU.",
+  "role": "ADMIN",
+  "clients": [
+    {
+      "$oid": "664509ae87732bf815449adf"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "664d9e6fd1c840b6828900b6"
+  },
+  "username": "1552261939",
+  "name": "bouijoux",
+  "surname": "corentin",
+  "email": "corentin.bouijoux@example.com",
+  "password": "$2b$08$zjAGB//c3ydYj1jsTwsFve010G8EQle7cPb85BTQjO0vAOa4HZNVO",
+  "role": "ADMIN",
+  "clients": [
+    {
+      "$oid": "664509ae87732bf815449adf"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6657807992498e31a9958e6e"
+  },
+  "username": "9165459821",
+  "name": "coucou",
+  "surname": "TEST",
+  "email": "corentin.bouijoux@example.com",
+  "role": "Other",
+  "clients": [],
+  "password": "$2a$08$1RTljcUbm315gLnEybqYmOsgB7h1/t1fI6mE4BRJdvBPMsyz6wgz2"
+}]
