@@ -155,6 +155,60 @@
     <section id="post-section" class="content-section">
         <div class="accordion accordion-flush" id="post_accordion">
             <div class="accordion-item">
+                <h2 class="accordion-header" id="send_email_label">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#send_email_body" aria-expanded="false" aria-controls="send_email_body">
+                        <h1>POST /send-email</h1>
+                    </button>
+                </h2>
+                <div id="send_email_body" class="accordion-collapse collapse" aria-labelledby="send_email_label" data-bs-parent="#post_accordion">
+                    <div class="accordion-body">
+                        <div>
+                            <textarea disabled>
+{
+    subject,
+    text,
+    html
+}
+                            </textarea>
+                        </div>
+                        <form action="/send-email" id="send_email">
+                            <input type="text" name="subject" placeholder="subject" value="Test email from swagger"> <br>
+                            <input type="text" name="text" placeholder="text" value="Text format of message"><br>
+                            <textarea name="html">
+<body style="font-family: Arial, sans-serif; width: 100%; margin: auto 0; padding:0;">
+    <div id="email" style="margin: auto; width: 600px; background-color: white;">
+        <table width="100%">
+            <tr>
+                <td bgcolor="#FF7900" align="center" style="color: white;">
+                    <h1> Nouveau message de Swagger !</h1>
+                </td>
+            </tr>
+        </table>
+        <table bgcolor="#EAF0F6" width="100%" style="margin-top: 5px; font-size: 25px;" >
+            <tr>
+                <td style="padding: 100px 10px;">
+                    <p style="font-weight: bold">Text format of message</p>
+                    <p align="center">Répondre à <a href="mailto:<%= locals.email %>"><%= locals.email %></a></p>
+                </td>
+            </tr>
+        </table>
+        <table width="100%">
+            <tr>
+                <td style="font-size: 10px;" >
+                    <p>&copy; 2024 Banque Virtuella. Tous droits réservés.</p> 
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+                            </textarea>
+                            <input type="submit" value="Send email">
+                        </form>
+                    </div>
+                    <div id="send_email_code" class="json-container"></div>
+                </div>
+            </div>
+            <div class="accordion-item">
                 <h2 class="accordion-header" id="login_client_label">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#login_client_body" aria-expanded="false" aria-controls="login_client_body">
                         <h1>POST /login/client</h1>
@@ -181,27 +235,51 @@
             </div>
             <div class="accordion-item">
                 <h2 class="accordion-header" id="login_client_label">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#login_client_forgotpassword_body" aria-expanded="false" aria-controls="login_client_forgotpassword_body">
-                        <h1>POST /login/client/forgotpassword</h1>
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#login_forgotpassword_body" aria-expanded="false" aria-controls="login_forgotpassword_body">
+                        <h1>POST /login/forgotpassword</h1>
                     </button>
                 </h2>
-                <div id="login_client_forgotpassword_body" class="accordion-collapse collapse" aria-labelledby="login_client_forgotpassword_label" data-bs-parent="#post_accordion">
+                <div id="login_forgotpassword_body" class="accordion-collapse collapse" aria-labelledby="login_forgotpassword_label" data-bs-parent="#post_accordion">
                     <div class="accordion-body">
                         <div>
                             <textarea disabled>
 {
     username,
-    password
+    type
+}
+
+{
+    username,
+    password,
+    otp,
+    type
 }
                             </textarea>
                         </div>
-                        <form action="/login/client/forgotpassword" id="login_client_forgotpassword">
+                        <h3>First step</h3>
+                        <form action="/login/forgotpassword" id="login_forgotpassword_first">
+                            <input type="text" name="username" placeholder="username" value="jude.bocq@gmail.com"> <br>
+                            <select name="type">
+                                <option value="employes">employe</option>
+                                <option value="clients">client</option>
+                            </select><br>
+                            <input type="password" name="password" placeholder="password" value="bonjour"><br>
+                            <input type="submit" value="Send email">
+                        </form>
+                        <h3>Second step</h3>
+                        <form action="/login/forgotpassword" id="login_forgotpassword_second">
                             <input type="text" name="username" placeholder="username" value="jude.bocq@gmail.com"> <br>
                             <input type="password" name="password" placeholder="password" value="bonjour"><br>
-                            <input type="submit" value="Login">
+                            <input type="number" placeholder="OTP" name="otp"> <br>
+                            <select name="type">
+                                <option value="employes">employe</option>
+                                <option value="clients">client</option>
+                            </select><br>
+                            <input type="submit" value="Reset">
                         </form>
+
                     </div>
-                    <div id="login_client_forgotpassword_code" class="json-container"></div>
+                    <div id="login_forgotpassword_code" class="json-container"></div>
                 </div>
             </div>
             <div class="accordion-item">
@@ -227,31 +305,6 @@
                         </form>
                     </div>
                     <div id="login_employe_code" class="json-container"></div>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="login_employe_label">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#login_employe_forgotpassword_body" aria-expanded="false" aria-controls="login_employe_forgotpassword_body">
-                        <h1>POST /login/employe/forgotpassword</h1>
-                    </button>
-                </h2>
-                <div id="login_employe_forgotpassword_body" class="accordion-collapse collapse" aria-labelledby="login_employe_forgotpassword_label" data-bs-parent="#post_accordion">
-                    <div class="accordion-body">
-                        <div>
-                            <textarea disabled>
-{
-    username,
-    password
-}
-                            </textarea>
-                        </div>
-                        <form action="/login/employe/forgotpassword" id="login_employe_forgotpassword">
-                            <input type="text" name="username" placeholder="username" value="0123456789"><br>
-                            <input type="password" name="password" placeholder="password" value="bonjour"><br>
-                            <input type="submit" value="Login">
-                        </form>
-                    </div>
-                    <div id="login_employe_forgotpassword_code" class="json-container"></div>
                 </div>
             </div>
             <div class="accordion-item">
@@ -613,10 +666,11 @@
 
     <script async>
         const forms = [
+            document.getElementById('send_email'),
             document.getElementById('login_client'),
-            document.getElementById('login_client_forgotpassword'),
+            document.getElementById('login_forgotpassword_first'),
+            document.getElementById('login_forgotpassword_second'),
             document.getElementById('login_employe'),
-            document.getElementById('login_employe_forgotpassword'),
             document.getElementById('users_new_employe'),
             document.getElementById('users_new_client'),
             document.getElementById('users_client_virement'),

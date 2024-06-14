@@ -112,20 +112,43 @@ Using these methods, you can comprehensively test the API to ensure it behaves a
 
 ### POST Endpoints
 
+- **POST /send-email** - Send a contact email to the employees.
+
+```json
+  {
+      "subject": "Subject of email",
+      "text": "Text format of email",
+      "html": "HTML format of email" 
+  }
+```
+
+- **POST /login/forgotpassword** - Forgot password process.
+
+  The forgot password process takes place in two steps:
+
+  ```json
+  {
+      "username": "example@domain.com",
+      "type": "clients"
+  }
+  ```
+
+  Then you will recieve an email containing an OTP code
+
+  ```json
+  {
+      "username": "client@example.com",
+      "password": "newPassw0rd",
+      "otp": "1234",
+      "type": "clients"
+  }
+  ```
 - **POST /login/client** - Client login with credentials.
 
   ```json
   {
       "username": "example@domain.com",
       "password": "password123"
-  }
-  ```
-- **POST /login/client/forgotpassword** - Client forgot password.
-
-  ```json
-  {
-  	"username": "example@domain.com",
-  	"password": "new_Passw0rd"
   }
   ```
 - **POST /login/employe** - Employee login with credentials.
@@ -136,17 +159,8 @@ Using these methods, you can comprehensively test the API to ensure it behaves a
       "password": "password123"
   }
   ```
-- **POST /login/employe/forgotpassword** - Employee forgot password.
-
-  ```json
-  {
-  	"username": "0000000000",
-  	"password": "new_Passw0rd"
-  }
-  ```
 - **POST /users/client/new** - Create a new client.
-
-  ```json
+- ```json
   {
       "email": "client@example.com",
       "name": "John",
