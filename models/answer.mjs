@@ -1,7 +1,9 @@
 const answer = { 
-    statusCode: 403,
+    statusCode: 500,
     headers: {},
-    body: {}
+    body: {
+        error: "Unkown Error"
+    }
 };
 
 export { answer };

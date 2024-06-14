@@ -3,24 +3,15 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
-import nodemailer from 'nodemailer';
 import userRouter from './routes/users.mjs';
 import loginRouter from './routes/login.mjs';
 import clientRouter from './routes/client/client.mjs';
 import employeRouter from './routes/employe/employe.mjs'
-import { connectDB } from './models/bdd.mjs';
+import { connectDB, requestDB, collections } from './models/bdd.mjs';
 import { answer } from './models/answer.mjs';
+import { transporter, mailOptions } from './models/email.mjs';
 
 const app = express();
-const transporter = nodemailer.createTransport({
-    port: 465,               // true for 465, false for other ports
-    host: "partage.univ-ubs.fr",
-        auth: {
-            user: process.env.EMAIL,
-            pass: process.env.EMAIL_PASSWORD,
-        },
-    secure: true
-});
 
 dotenv.config();
 app.set('view engine', 'ejs');
@@ -36,27 +27,38 @@ app.use('/favicon.ico', express.static('./logo.png'));
 
 app.post('/send-email', async (req, res, next) => {
 
-    const mailOptions = {
-        from: `"${req.body.name}" <${process.env.EMAIL}>`,
-        to: req.body.email,
-        subject: req.body.subject,
-        text: req.body.text,
-        html: `<b>${req.body.text}</b>`
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            answer.statusCode = 500;
-            answer.body = {
-                error: error.response
-            }
-        } else {
-            answer.statusCode = 200;
-            answer.body = info;
+    const resp = await requestDB(req, collections.employes.name, [{
+        $project: {
+            email: 1
         }
+    }]);
+    if (!resp || resp.length == 0){
+        answer.body = {
+            error: "No email found !"
+        }
+        answer.statusCode = 404;
         req.answer = JSON.stringify(answer);
         next();
-    });
+    } else {
+        mailOptions.to =  resp ? resp.map(employee => employee.email) : "";
+        mailOptions.subject =  req.body.subject;
+        mailOptions.text =  req.body.text;
+        mailOptions.html =  req.body.html;
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                answer.statusCode = 500;
+                answer.body = {
+                    error: error.response
+                }
+            } else {
+                answer.statusCode = 200;
+                answer.body = info.messageId;
+            }
+            req.answer = JSON.stringify(answer);
+            next();
+        });
+    }
 });
 
 app.use(connectDB);
@@ -102,7 +104,14 @@ function verifToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader ? authHeader.split(' ')[1] : null;
     const path = req.originalUrl;
-    if (path == '/login/client' || path == '/login/employe' || path == '/' || path == "/users/client/new" || "/send-email") {
+    if (
+        path == '/login/client' || 
+        path == '/login/employe' || 
+        path == '/' || 
+        path == "/users/client/new" || 
+        path == "/send-email" ||
+        path == "/login/forgotpassword" 
+    ) {
         next();
     } else if(token) {
         jwt.verify(token, process.env.SECRET_KEY, (err, user) => {

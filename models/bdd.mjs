@@ -52,6 +52,14 @@ async function connectDB(req, res, next) {
 }
 
 const collections = {
+    otp: {
+        name: "otp",
+        fields: {
+            _id: "ObjectId",
+            otp: "Number",
+            username: "String"
+        }
+    },
     cartes: {
         name: "cartes_bancaires",
         fields: {
